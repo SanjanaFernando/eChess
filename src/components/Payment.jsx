@@ -1,13 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Payment = () => {
   return (
-    
-    <div className="flex  items-center justify-around min-h-screen bg-gray-200 bg-cover bg-center" style={{ backgroundImage: "url('/paymentbg.png')" }}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 bg-cover bg-center p-4 md:flex-row md:items-center md:justify-center" >
+      
       <div className="bg-white bg-opacity-15 backdrop-filter backdrop-blur-lg p-5 rounded-lg shadow-lg w-full max-w-lg mb-5 sm:w-4/5 md:w-1/3 lg:w-1/4 border border-white border-opacity-20 mx-4">
-        <button className="text-blue-500 text-lg mb-5">← Back</button>
+        <Link to="/"><button className="text-blue-500 text-lg mb-5">← Back</button>
+        </Link>
         <h2 className="text-2xl mb-5">Register to Tournament</h2>
-        <p className="text-lg mb-2">LKR 5000.00 <span className="text-sm text-gray-300">per one person</span></p>
+        <p className="text-lg mb-2">LKR 5000.00 <span className="text-sm text-gray-700">per one person</span></p>
         <div className="flex justify-between mb-2">
           <p>Tournament</p>
           <p>LKR 5000.00</p>
@@ -19,8 +21,9 @@ const Payment = () => {
           <p>LKR 5000.00</p>
         </div>
       </div>
-      <div className="bg-white bg-opacity-15 backdrop-filter backdrop-blur-lg p-5 rounded-lg shadow-lg w-full max-w-lg mb-5 sm:w-4/5 md:w-1/3 lg:w-1/4 border border-white border-opacity-30 mx-4">
-        <h2 className="text-2xl mb-5">Pay with card</h2>
+      
+      <div className="bg-white p-5 rounded-lg shadow-lg w-full max-w-lg mb-5 sm:w-4/5 md:w-1/3 lg:w-1/4 border border-white mx-4">
+        <h2 className="text-2xl font-bold mb-5">Pay with card</h2>
         <form>
           <div className="mb-4">
             <label htmlFor="email" className="block mb-2">Email</label>
@@ -50,6 +53,7 @@ const Payment = () => {
           By providing your card information, you allow eChess to charge your card for make payments in accordance with their terms.
         </p>
       </div>
+      
     </div>
   );
 };
