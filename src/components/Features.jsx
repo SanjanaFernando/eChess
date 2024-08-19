@@ -3,9 +3,9 @@ import React from 'react';
 const Features = () => {
   return (
     <section className="text-left p-16 " >
-      <div className="text-left text-4xl text-black  mb-12">
+      <div className="text-center text-4xl text-black  mb-12">
         <h1 className='font-bold'>Experience the Thrill of Online Chess and Tournament Registration</h1>
-        <p className="text-left text-2xl text-black">Join eChess and enjoy the convenience of playing chess online and registering for tournaments all in one place.</p>
+        <p className="text-center text-2xl text-black">Join eChess and enjoy the convenience of playing chess online and registering for tournaments all in one place.</p>
       </div>
       <div className="flex flex-wrap justify-center gap-5 mb-10">
         <div className="w-full sm:w-auto flex-1 p-5 bg-white/20 backdrop-blur-lg rounded-lg shadow-lg border border-white/30 text-center">
@@ -21,8 +21,8 @@ const Features = () => {
       </div>
 
 
-      <div className="text-left text-4xl text-black  mb-12">
-        <h1 classname = 'font-bold'>Simplify Your Chess Experience with eChess</h1>
+      <div className="text-center text-4xl text-black mb-12">
+        <h1 className = 'font-bold'>Simplify Your Chess Experience with eChess</h1>
       </div>
       <div className="flex flex-wrap justify-center gap-5 mb-10">
         <div className="flex-1 min-w-[250px] max-w-[350px] p-5 bg-white/20 backdrop-blur-lg rounded-lg shadow-lg border border-white/30">
