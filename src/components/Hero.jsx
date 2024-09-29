@@ -19,7 +19,7 @@ const Hero = () => {
     Join us and experience the thrill of competitive chess, connect with fellow players, and showcase your skills.
   </p>
 
-  <button className="h-100 bg-blue-700 text-white py-2 px-4 text-xl md:text-lg sm:text-base cursor-pointer rounded">
+  <button className="bg-transparent text-purple-700 py-2 px-4 border border-purple-500 cursor-pointer rounded text-lg w-full md:w-auto my-0 md:my-0 transition duration-300 ease-in-out hover:bg-purple-500 hover:text-white hover:border-transparent">
     Get Started
   </button>
 </section>
