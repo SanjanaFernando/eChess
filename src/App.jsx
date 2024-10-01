@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Payment from './components/Payment';
+import ChessGame from './components/ChessGame';
 import './App.css';
 import SignupOrganizer from './components/SignupOrganizer';
 import PlayerDashboard from './components/Playerdashboard';
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/chessgame" element={<ChessGame />} />
             <Route path="/playerdashboard" element={<PlayerDashboard />} />
             <Route path="/signuporganizer" element={<SignupOrganizer />} />
           </Routes>

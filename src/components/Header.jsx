@@ -9,7 +9,7 @@ const Header = () => {
         
         <nav className="flex flex-col md:flex-row items-center w-full md:w-auto">
         <img src="/LogoW.png" alt="Logo" className="h-10 w-auto mr-4" />
-          <Link to="/playerdashboard" className="mx-4 text-white no-underline text-base text-center">Play</Link>
+          <Link to="/chessgame" className="mx-4 text-white no-underline text-base text-center">Play</Link>
           <a href="#" className="mx-4 text-white no-underline text-base text-center">Organize</a>
           <a href="#" className="mx-4 text-white no-underline text-base text-center">Tournaments</a>
           <Link to="/Payment" className="mx-4 text-white no-underline text-base text-center">Payments</Link>
