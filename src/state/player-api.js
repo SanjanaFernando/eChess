@@ -2,15 +2,25 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const login = async (email, password) => {
+
+export const registerPlayer = async (data) => {
     try {
-        const res = await axios.post(`${API_URL}/auth/login`, {
-            email: email,
-            password: password,
-        });
-        console.log(res.data);
-        return res.data;
-    } catch (err) {
-        throw err;
+        const response = await axios.post(`${API_URL}/auth/register`, data);
+        return response.data;
+    } catch (error) {
+        console.error('Error registering player', error);
+        throw error;
     }
-}
+};
+
+
+export const login = async (data) => {
+    try {
+        console.log(API_URL);
+        const response = await axios.post(`${API_URL}/auth/authenticate`, data);
+        return response.data;
+    } catch (error) {
+        console.error('Error logging in', error);
+        throw error;
+    }
+};
