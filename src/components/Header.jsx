@@ -20,12 +20,12 @@ const Header = () => {
       
         <Link to="/signup">
           <button className="bg-blue-700 text-white py-2 px-4 cursor-pointer rounded text-lg w-full md:w-auto my-0 md:my-0 mr-2">
-            Sign Up as Player
+            Sign up
           </button>
         </Link>
-        <Link to="/signuporganizer">
+        <Link to="/Login">
           <button className="bg-blue-700 text-white py-2 px-4 cursor-pointer rounded text-lg w-full md:w-auto my-2 md:my-0">
-            Sign Up as Organizer
+            Login
           </button>
         </Link>
         
