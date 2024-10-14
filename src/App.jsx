@@ -8,6 +8,7 @@ import ChessGame from './components/ChessGame';
 import './App.css';
 import SignupOrganizer from './components/SignupOrganizer';
 import PlayerDashboard from './components/Playerdashboard';
+import TournamentRegistration from './components/TournamentRegistration';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="/chessgame" element={<ChessGame />} />
             <Route path="/playerdashboard" element={<PlayerDashboard />} />
             <Route path="/signuporganizer" element={<SignupOrganizer />} />
+            <Route path="/tr" element={<TournamentRegistration/>}/>
           </Routes>
         </main>
       </div>
