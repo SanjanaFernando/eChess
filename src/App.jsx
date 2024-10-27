@@ -9,6 +9,7 @@ import './App.css';
 import SignupOrganizer from './components/SignupOrganizer';
 import PlayerDashboard from './components/Playerdashboard';
 import TournamentRegistration from './components/TournamentRegistration';
+import Organizerdashboardnew from './components/Organizerdashboard';
 
 const App = () => {
   return (
@@ -22,9 +23,10 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/chessgame" element={<ChessGame />} />
-            <Route path="/playerdashboard" element={<PlayerDashboard />} />
+            <Route path="/pd" element={<PlayerDashboard />} />
             <Route path="/signuporganizer" element={<SignupOrganizer />} />
             <Route path="/tr" element={<TournamentRegistration/>}/>
+            <Route path="/od" element={<Organizerdashboardnew/>}/>
           </Routes>
         </main>
       </div>
