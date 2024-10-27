@@ -51,53 +51,53 @@ const PlayerDashboard = () => {
 		<div className="bg-gray-100 min-h-screen p-6">
 			{/* Navbar */}
 			<nav className="bg-gray-200 p-4 flex justify-between items-center">
-				<h1 className="text-xl font-semibold text-gray-800 flex items-center">
-					<span className="mr-2">♟️</span> eChess
-				</h1>
+			<div className="flex items-center">
+            <img src="/LogoB.png" alt="eChess Logo" className="h-10 mr-4" />
+          </div>
 				<div className="flex space-x-8">
 					<a href="#" className="text-gray-800 font-medium">Play</a>
 					<a href="#" className="text-gray-800 font-medium">Tournaments</a>
 					<a href="#" className="text-gray-800 font-medium">Payments</a>
 				</div>
-				<div className="text-gray-800">
-					<span className="text-2xl">👤</span>
-				</div>
+				<div className="mt-4 sm:mt-0 flex items-center">
+          <img src="/User.png" alt="User Icon" className="h-10 mr-4" />
+        </div>
 			</nav>
 
-{/* Search and Filters */}
-<div className="bg-pink-100 p-4 rounded-md mt-4">
-  <h2 className="text-lg font-semibold text-gray-700 mb-4">Search for Tournaments</h2>
-  <div className="flex items-center space-x-4">
-    <select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-      <option>District</option>
-      <option>North District</option>
-      <option>South District</option>
-      <option>East District</option>
-      <option>West District</option>
-    </select>
-    <select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-      <option>Club</option>
-      <option>Chess Club A</option>
-      <option>Chess Club B</option>
-      <option>Chess Club C</option>
-    </select>
-    <select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-      <option>Entry Type</option>
-      <option>Free</option>
-      <option>Paid</option>
-    </select>
-    <div className="relative w-full max-w-md">
-      <input
-        type="text"
-        placeholder="Search"
-        className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full"
-      />
-      <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-        🔍
-      </button>
-    </div>
-  </div>
-</div>
+			{/* Search and Filters */}
+			<div className="bg-pink-100 p-4 rounded-md mt-4">
+				<h2 className="text-lg font-semibold text-gray-700 mb-4">Search for Tournaments</h2>
+				<div className="flex items-center space-x-4">
+					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
+						<option>District</option>
+						<option>North District</option>
+						<option>South District</option>
+						<option>East District</option>
+						<option>West District</option>
+					</select>
+					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
+						<option>Club</option>
+						<option>Chess Club A</option>
+						<option>Chess Club B</option>
+						<option>Chess Club C</option>
+					</select>
+					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
+						<option>Entry Type</option>
+						<option>Free</option>
+						<option>Paid</option>
+					</select>
+					<div className="relative w-full max-w-md">
+						<input
+							type="text"
+							placeholder="Search"
+							className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full"
+						/>
+						<button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+							🔍
+						</button>
+					</div>
+				</div>
+			</div>
 
 			{/* Tabs */}
 			<div className="flex space-x-4 mt-6">
