@@ -1,67 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PlayerDashboard = () => {
 	const [activeTab, setActiveTab] = useState('Upcoming');
+	const [tournaments, setTournaments] = useState([]);
+	const [loading, setLoading] = useState(false);
 
-	// Tournament data for each tab
-	const tournamentsData = {
-		Upcoming: [
-			{
-				name: '2024 Michigan Upper Peninsula Open',
-				club: 'Utah Chess Association',
-				entryType: 'Paid',
-				img: 'https://via.placeholder.com/50', // Replace with actual image URL
-			},
-			{
-				name: 'Roger Hale Chess Celebration',
-				club: 'Chess Castle of Minnesota',
-				entryType: 'Free',
-				img: 'https://via.placeholder.com/50',
-			},
-		],
-		Registered: [
-			{
-				name: '2024 Farewell Bobby Fischer',
-				club: 'Utah Chess Association',
-				entryType: 'Paid',
-				img: 'https://via.placeholder.com/50',
-			},
-		],
-		Ongoing: [
-			{
-				name: '74th Oregon Open',
-				club: 'Oregon Chess Federation',
-				entryType: 'Paid',
-				img: 'https://via.placeholder.com/50',
-			},
-		],
-		Finished: [
-			{
-				name: '2023 Winter Chess Championship',
-				club: 'California Chess Club',
-				entryType: 'Free',
-				img: 'https://via.placeholder.com/50',
-			},
-		],
+	// Mock functions to simulate API calls for each tab
+	const fetchTournamentData = async (tab) => {
+		setLoading(true);
+		await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+		const data = {
+			Upcoming: [
+				{
+					name: '2024 Michigan Upper Peninsula Open',
+					club: 'Utah Chess Association',
+					entryType: 'Paid',
+					img: 'https://via.placeholder.com/50',
+				},
+				{
+					name: 'Roger Hale Chess Celebration',
+					club: 'Chess Castle of Minnesota',
+					entryType: 'Free',
+					img: 'https://via.placeholder.com/50',
+				},
+			],
+			Registered: [
+				{
+					name: '2024 Farewell Bobby Fischer',
+					club: 'Utah Chess Association',
+					entryType: 'Paid',
+					img: 'https://via.placeholder.com/50',
+				},
+			],
+			Ongoing: [
+				{
+					name: '74th Oregon Open',
+					club: 'Oregon Chess Federation',
+					entryType: 'Paid',
+					img: 'https://via.placeholder.com/50',
+				},
+			],
+			Finished: [
+				{
+					name: '2023 Winter Chess Championship',
+					club: 'California Chess Club',
+					entryType: 'Free',
+					img: 'https://via.placeholder.com/50',
+				},
+			],
+		};
+		setTournaments(data[tab] || []);
+		setLoading(false);
 	};
 
-	const tournaments = tournamentsData[activeTab] || [];
+	// Fetch data whenever the active tab changes
+	useEffect(() => {
+		fetchTournamentData(activeTab);
+	}, [activeTab]);
+
+	// Handle tab click
+	const handleTabClick = (tab) => {
+		setActiveTab(tab);
+	};
 
 	return (
 		<div className="bg-gray-100 min-h-screen p-6">
 			{/* Navbar */}
 			<nav className="bg-gray-200 p-4 flex justify-between items-center">
-			<div className="flex items-center">
-            <img src="/LogoB.png" alt="eChess Logo" className="h-10 mr-4" />
-          </div>
+				<div className="flex items-center">
+					<img src="/LogoB.png" alt="eChess Logo" className="h-10 mr-4" />
+				</div>
 				<div className="flex space-x-8">
 					<a href="#" className="text-gray-800 font-medium">Play</a>
 					<a href="#" className="text-gray-800 font-medium">Tournaments</a>
 					<a href="#" className="text-gray-800 font-medium">Payments</a>
 				</div>
 				<div className="mt-4 sm:mt-0 flex items-center">
-          <img src="/User.png" alt="User Icon" className="h-10 mr-4" />
-        </div>
+					<img src="/User.png" alt="User Icon" className="h-10 mr-4" />
+				</div>
 			</nav>
 
 			{/* Search and Filters */}
@@ -104,7 +120,7 @@ const PlayerDashboard = () => {
 				{['Upcoming', 'Registered', 'Ongoing', 'Finished'].map((tab) => (
 					<button
 						key={tab}
-						onClick={() => setActiveTab(tab)}
+						onClick={() => handleTabClick(tab)}
 						className={`font-medium px-4 py-2 rounded-t-md ${activeTab === tab ? 'text-gray-700 border-b-2 border-gray-700' : 'text-gray-500'
 							}`}
 					>
@@ -115,7 +131,9 @@ const PlayerDashboard = () => {
 
 			{/* Tournament List */}
 			<div className="mt-4 space-y-4">
-				{tournaments.length > 0 ? (
+				{loading ? (
+					<p className="text-center text-gray-500">Loading tournaments...</p>
+				) : tournaments.length > 0 ? (
 					tournaments.map((tournament, index) => (
 						<div
 							key={index}
