@@ -30,7 +30,7 @@ const Hero = () => {
 					className="bg-transparent text-white-700 py-2 px-4 border border-white-500 cursor-pointer rounded text-lg w-full md:w-auto my-0 md:my-0 transition duration-300 ease-in-out hover:bg-purple-500 hover:text-white hover:border-transparent"
 					onClick={handleStart}
 				>
-					Get Started
+					Get Starteds
 				</button>
 			</section>
 
