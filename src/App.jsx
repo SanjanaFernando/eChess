@@ -10,6 +10,7 @@ import SignupOrganizer from './components/SignupOrganizer';
 import PlayerDashboard from './components/Playerdashboard';
 import TournamentRegistration from './components/TournamentRegistration';
 import Organizerdashboardnew from './components/Organizerdashboard';
+import CreateTournament from './components/CreateTournament';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/signuporganizer" element={<SignupOrganizer />} />
             <Route path="/tr" element={<TournamentRegistration/>}/>
             <Route path="/od" element={<Organizerdashboardnew/>}/>
+            <Route path="/ct" element={<CreateTournament/>}/>
           </Routes>
         </main>
       </div>
