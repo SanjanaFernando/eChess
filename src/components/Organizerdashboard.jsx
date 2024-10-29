@@ -8,6 +8,17 @@ const TournamentsPage = () => {
     club: '',
     entry: ''
   });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Toggle the dropdown menu
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Close the dropdown when clicking outside
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
 
   const tournamentData = {
     Upcoming: [
@@ -15,19 +26,17 @@ const TournamentsPage = () => {
       { name: 'Roger Hale Chess Celebration', club: 'Chess Castle of Minnesota', district: 'Minnesota', entry: 'Free' },
     ],
     Ongoing: [
-      { name: '74th Oregon Open', club: 'Oregon Chess Federation', district: 'Oregon', entry: 'Paid' },
+      { name: '74th Oregon Open', club: 'Oregon Chess Federation', players: 450, round: 5 },
     ],
     Completed: [
       { name: '2024 Farewell Bobby Fischer', club: 'Utah Chess Association', district: 'Utah', entry: 'Paid' },
     ],
   };
 
-  // Function to handle tab switching
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
-  // Function to handle search and filter changes
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -39,7 +48,6 @@ const TournamentsPage = () => {
     });
   };
 
-  // Function to filter and search tournaments
   const getFilteredTournaments = () => {
     return tournamentData[activeTab].filter(tournament => {
       return (
@@ -51,10 +59,8 @@ const TournamentsPage = () => {
     });
   };
 
-  // Example function for editing tournament data
   const handleEditClick = (tournamentName) => {
     console.log(`Editing tournament: ${tournamentName}`);
-    // Add your edit functionality here
   };
 
   const TournamentTable = ({ tournaments }) => (
@@ -64,8 +70,17 @@ const TournamentsPage = () => {
           <tr>
             <th className="text-left p-4 text-gray-600 font-semibold border-b">Tournament Name</th>
             <th className="text-left p-4 text-gray-600 font-semibold border-b">Club</th>
-            <th className="text-left p-4 text-gray-600 font-semibold border-b">District</th>
-            <th className="text-left p-4 text-gray-600 font-semibold border-b">Entry Type</th>
+            {activeTab === 'Ongoing' ? (
+              <>
+                <th className="text-left p-4 text-gray-600 font-semibold border-b">Players</th>
+                <th className="text-left p-4 text-gray-600 font-semibold border-b">Round</th>
+              </>
+            ) : (
+              <>
+                <th className="text-left p-4 text-gray-600 font-semibold border-b">District</th>
+                <th className="text-left p-4 text-gray-600 font-semibold border-b">Entry Type</th>
+              </>
+            )}
             <th className="p-4 border-b"></th>
           </tr>
         </thead>
@@ -74,8 +89,17 @@ const TournamentsPage = () => {
             <tr key={index} className="border-t">
               <td className="p-4 text-gray-700">{tournament.name}</td>
               <td className="p-4 text-gray-700">{tournament.club}</td>
-              <td className="p-4 text-gray-700">{tournament.district}</td>
-              <td className="p-4 text-gray-700">{tournament.entry}</td>
+              {activeTab === 'Ongoing' ? (
+                <>
+                  <td className="p-4 text-gray-700">{tournament.players}</td>
+                  <td className="p-4 text-gray-700">{tournament.round}</td>
+                </>
+              ) : (
+                <>
+                  <td className="p-4 text-gray-700">{tournament.district}</td>
+                  <td className="p-4 text-gray-700">{tournament.entry}</td>
+                </>
+              )}
               <td className="p-4 text-blue-500 text-right">
                 <button onClick={() => handleEditClick(tournament.name)} className="flex items-center space-x-1">
                   <span>✏️</span>
@@ -90,25 +114,49 @@ const TournamentsPage = () => {
   );
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
-      {/* Navbar */}
-      <nav className="bg-gray-200 p-4 flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-gray-800 flex items-center">
-          <div className="flex items-center">
-            <img src="/LogoB.png" alt="eChess Logo" className="h-10 mr-4" />
-          </div>
-        </h1>
-        <div className="flex space-x-8">
-          <a href="#" className="text-gray-800 font-medium">Create</a>
-          <a href="#" className="text-gray-800 font-medium">Tournaments</a>
-          <a href="#" className="text-gray-800 font-medium">Payments</a>
+    <div className="bg-gray-100 min-h-screen p-6" onClick={closeDropdown}>
+    {/* Navbar */}
+    <nav className="bg-gray-200 p-4 flex justify-between items-center mb-8 rounded-md shadow">
+      <h1 className="text-xl font-semibold text-gray-800 flex items-center">
+        <div className="flex items-center">
+          <img src="/LogoB.png" alt="eChess Logo" className="h-10 mr-4" />
         </div>
-        <div className="mt-4 sm:mt-0 flex items-center">
+      </h1>
+      <div className="flex space-x-8">
+        <a href="#" className="text-gray-800 font-medium">Create</a>
+        <a href="#" className="text-gray-800 font-medium">Tournaments</a>
+        <a href="#" className="text-gray-800 font-medium">Payments</a>
+      </div>
+      <div className="relative">
+        <div 
+          className="mt-4 sm:mt-0 flex items-center cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleDropdown();
+          }}
+        >
           <img src="/User.png" alt="User Icon" className="h-10 mr-4" />
         </div>
-      </nav>
+        {isDropdownOpen && (
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+            <ul className="py-1">
+              <li>
+                <a href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+              </li>
+              <li>
+                <button
+                  onClick={() => console.log('Logout clicked')}
+                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </nav>
 
-      {/* Search and Filters */}
       <div className="bg-pink-100 p-4 rounded-md mt-4">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Search for Tournaments</h2>
         <div className="flex items-center space-x-4">
@@ -157,7 +205,6 @@ const TournamentsPage = () => {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="bg-gray-200 p-4 items-center flex space-x-8 mt-6">
         {['Upcoming', 'Ongoing', 'Completed'].map(tab => (
           <button
@@ -170,7 +217,6 @@ const TournamentsPage = () => {
         ))}
       </div>
 
-      {/* Tournament Table based on Active Tab and Filters */}
       <TournamentTable tournaments={getFilteredTournaments()} />
     </div>
   );
