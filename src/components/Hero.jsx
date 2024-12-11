@@ -12,9 +12,9 @@ const Hero = () => {
 	};
 
 	return (
-		<section className="sandwitch">
+		<section className="sandwitch h-800">
 			<section
-				className="flex flex-col items-start justify-center text-left py-5 px-5 bg-cover bg-center text-white h-200"
+				className="flex flex-col items-start justify-center text-left py-5 px-5 bg-cover bg-center text-white h-full"
 				style={{ backgroundImage: "url('/background.jpeg')" }}
 			>
 				{" "}

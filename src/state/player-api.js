@@ -16,8 +16,8 @@ export const registerPlayer = async (data) => {
 
 export const login = async (data) => {
     try {
-        console.log(API_URL);
-        const response = await axios.post(`${API_URL}/auth/authenticate`, data);
+        const response = await axios.post(`${API_URL}/auth/login`, data);
+        // console.log("data: ", response.data);
         return response.data;
     } catch (error) {
         console.error('Error logging in', error);

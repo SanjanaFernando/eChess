@@ -21,10 +21,8 @@ const Signup = () => {
 				password,
 			});
 
-			localStorage.setItem("token", response.token);
-
 			if (response) {
-				navigate("/playerdashboard");
+				navigate("/login");
 			}
 
 			console.log("Registration Successful");

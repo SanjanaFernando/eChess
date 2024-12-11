@@ -4,43 +4,42 @@ import { Link } from "react-router-dom";
 const Header = () => {
 	return (
 		<header className="top-0 flex flex-col md:flex-row justify-between items-center p-2 bg-transparent text-white w-full ">
-<div className="flex items-center mb-5 md:mb-0">
-    <nav className="flex flex-col md:flex-row items-center w-full md:w-auto">
-        {/* Logo with a hover animation */}
-        <img
-            src="/LogoW.png"
-            alt="Logo"
-            className="h-10 w-auto mr-4 transition-transform duration-300 ease-in-out hover:scale-110"
-        />
+			<div className="flex items-center mb-5 md:mb-0">
+				<nav className="flex flex-col md:flex-row items-center w-full md:w-auto">
+					{/* Logo with a hover animation */}
+					<img
+						src="/LogoW.png"
+						alt="Logo"
+						className="h-10 w-auto mr-4 transition-transform duration-300 ease-in-out hover:scale-110"
+					/>
 
-        {/* Navigation Links with hover effects */}
-        <Link
-            to="/login"
-            className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
-        >
-            Play
-        </Link>
-        <Link
-            to="/login"
-            className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
-        >
-            Organize
-        </Link>
-        <Link
-            to="/login"
-            className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
-        >
-            Tournaments
-        </Link>
-        <Link
-            to="/Payment"
-            className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
-        >
-            Payments
-        </Link>
-    </nav>
-</div>
-
+					{/* Navigation Links with hover effects */}
+					<Link
+						to="/login"
+						className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
+					>
+						Play
+					</Link>
+					<Link
+						to="/login"
+						className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
+					>
+						Organize
+					</Link>
+					<Link
+						to="/login"
+						className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
+					>
+						Tournaments
+					</Link>
+					<Link
+						to="/Payment"
+						className="mx-4 text-white no-underline text-base text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
+					>
+						Payments
+					</Link>
+				</nav>
+			</div>
 
 			<div className="space-x-8 flex flex-col md:flex-row items-center w-full md:w-auto mt-0 md:mt-0">
 				<Link to="/signup">

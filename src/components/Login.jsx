@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../state/player-api";
+import { tokenDecode } from "../utils/token";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -12,10 +13,14 @@ const Login = () => {
 		event.preventDefault();
 		try {
 			const response = await login({ email, password });
-			localStorage.setItem("token", response.token);
 
 			if (response) {
-				navigate("/playerdashboard");
+				localStorage.setItem("token", response.token);
+				const decodedToken = tokenDecode(response.token);
+				const userRole = decodedToken.role;
+				userRole == "ORGANIZER"
+					? navigate("/organizer-dashboard")
+					: navigate("/player-dashboard");
 			}
 
 			console.log("Logged in successfully");
