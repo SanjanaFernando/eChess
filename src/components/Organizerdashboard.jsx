@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getClassifiedTournaments } from "../state/tournament-api";
 
 const TournamentsPage = () => {
 	const [activeTab, setActiveTab] = useState("Upcoming");
@@ -10,7 +11,26 @@ const TournamentsPage = () => {
 		entry: "",
 	});
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [tournamentData, setTournamentData] = useState({
+		Upcoming: [],
+		Ongoing: [],
+		Completed: [],
+	});
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const fetchTournaments = async () => {
+			try {
+				const tournaments = await getClassifiedTournaments();
+
+				setTournamentData(tournaments);
+			} catch (error) {
+				console.error("Error fetching tournaments:", error);
+			}
+		};
+
+		fetchTournaments();
+	}, []);
 
 	// Toggle the dropdown menu
 	const toggleDropdown = () => {
@@ -20,39 +40,6 @@ const TournamentsPage = () => {
 	// Close the dropdown when clicking outside
 	const closeDropdown = () => {
 		setIsDropdownOpen(false);
-	};
-
-	const tournamentData = {
-		Upcoming: [
-			{
-				name: "2024 Michigan Upper Peninsula Open",
-				club: "Utah Chess Association",
-				district: "Utah",
-				entry: "Paid",
-			},
-			{
-				name: "Roger Hale Chess Celebration",
-				club: "Chess Castle of Minnesota",
-				district: "Minnesota",
-				entry: "Free",
-			},
-		],
-		Ongoing: [
-			{
-				name: "74th Oregon Open",
-				club: "Oregon Chess Federation",
-				players: 450,
-				round: 5,
-			},
-		],
-		Completed: [
-			{
-				name: "2024 Farewell Bobby Fischer",
-				club: "Utah Chess Association",
-				district: "Utah",
-				entry: "Paid",
-			},
-		],
 	};
 
 	const handleTabClick = (tab) => {
@@ -109,25 +96,40 @@ const TournamentsPage = () => {
 						<th className="text-left p-4 text-gray-600 font-semibold border-b">
 							Tournament Name
 						</th>
-						<th className="text-left p-4 text-gray-600 font-semibold border-b">
-							Starting Date
-						</th>
 						{activeTab === "Ongoing" ? (
-							<>
-								<th className="text-left p-4 text-gray-600 font-semibold border-b">
-									Players
-								</th>
-								<th className="text-left p-4 text-gray-600 font-semibold border-b">
-									Round
-								</th>
-							</>
-						) : (
 							<>
 								<th className="text-left p-4 text-gray-600 font-semibold border-b">
 									End Date
 								</th>
 								<th className="text-left p-4 text-gray-600 font-semibold border-b">
-									Registration Fee
+									Active Players
+								</th>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									Ongoing Round
+								</th>
+							</>
+						) : activeTab === "Completed" ? (
+							<>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									Starting Date
+								</th>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									End Date
+								</th>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									Participations
+								</th>
+							</>
+						) : (
+							<>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									Starting Date
+								</th>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									End Date
+								</th>
+								<th className="text-left p-4 text-gray-600 font-semibold border-b">
+									Entry Type
 								</th>
 							</>
 						)}
@@ -140,22 +142,37 @@ const TournamentsPage = () => {
 							<td className="p-4 text-gray-700">
 								{tournament.name}
 							</td>
-							<td className="p-4 text-gray-700">
-								{tournament.club}
-							</td>
 							{activeTab === "Ongoing" ? (
 								<>
 									<td className="p-4 text-gray-700">
-										{tournament.players}
+										{tournament.endDate}
 									</td>
 									<td className="p-4 text-gray-700">
-										{tournament.round}
+										{tournament.participations}
+									</td>
+									<td className="p-4 text-gray-700">
+										{tournament.ongoingRound}
+									</td>
+								</>
+							) : activeTab === "Completed" ? (
+								<>
+									<td className="p-4 text-gray-700">
+										{tournament.startDate}
+									</td>
+									<td className="p-4 text-gray-700">
+										{tournament.endDate}
+									</td>
+									<td className="p-4 text-gray-700">
+										{tournament.participations}
 									</td>
 								</>
 							) : (
 								<>
 									<td className="p-4 text-gray-700">
-										{tournament.district}
+										{tournament.startDate}
+									</td>
+									<td className="p-4 text-gray-700">
+										{tournament.endDate}
 									</td>
 									<td className="p-4 text-gray-700">
 										{tournament.entry}
@@ -169,8 +186,8 @@ const TournamentsPage = () => {
 									}
 									className="flex items-center space-x-1"
 								>
-									<span>✏️</span>
-									<span>Edit</span>
+									<span>ℹ️</span>
+									<span>View</span>
 								</button>
 							</td>
 						</tr>
