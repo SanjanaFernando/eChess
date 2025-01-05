@@ -12,6 +12,7 @@ import TournamentRegistration from "./components/TournamentRegistration";
 import Organizerdashboardnew from "./components/Organizerdashboard";
 import CreateTournament from "./components/CreateTournament";
 import UpdateTournament from "./components/UpdateTournament";
+import PlayerProfile from "./components/PlayerProfile";
 
 const App = () => {
 	return (
@@ -47,6 +48,10 @@ const App = () => {
 						<Route
 							path="/update-tournament"
 							element={<UpdateTournament />}
+						/>
+						<Route
+							path="/pp"
+							element={<PlayerProfile />}
 						/>
 					</Routes>
 				</main>
