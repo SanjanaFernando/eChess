@@ -47,7 +47,7 @@ const PlayerDashboard = () => {
 					name: "74th Oregon Open",
 					club: "Oregon Chess Federation",
 					entryType: "Paid",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 			],
 			Finished: [
@@ -55,7 +55,7 @@ const PlayerDashboard = () => {
 					name: "2023 Winter Chess Championship",
 					club: "California Chess Club",
 					entryType: "Free",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 			],
 		};
