@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Features from "./Features";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Hero = () => {
 	const navigate = useNavigate();
@@ -12,31 +13,56 @@ const Hero = () => {
 	};
 
 	return (
-		<section className="sandwitch h-800">
+		
+		<>
 			<section
-				className="flex flex-col items-start justify-center text-left py-5 px-5 bg-cover bg-center text-white h-full"
+				className="flex flex-col items-start justify-start text-left py-5 px-5 bg-cover bg-center text-white min-h-screen w-full"
 				style={{ backgroundImage: "url('/background.jpeg')" }}
 			>
 				{" "}
 				<Header />
-				<h1 className="text-4xl md:text-3xl sm:text-2xl mt-24 md:mt-20 sm:mt-16 mb-8 font-bold">
-					Welcome to eChess, the ultimate online chess platform.
-				</h1>
-				<p className="text-xl md:text-lg sm:text-base mt-2 mb-12">
-					Join us and experience the thrill of competitive chess,
-					connect with fellow players, and showcase your skills.
-				</p>
-				<button
-					className="bg-transparent text-white-700 py-2 px-4 border border-white-500 cursor-pointer rounded text-lg w-full md:w-auto my-0 md:my-0 transition duration-300 ease-in-out hover:bg-purple-500 hover:text-white hover:border-transparent"
-					onClick={handleStart}
-				>
-					Get Started
-				</button>
-			</section>
+				<div className="flex flex-col justify-center items-start text-left px-5 md:px-10 min-h-screen">
+					<motion.h1
+						className="text-4xl md:text-5xl mb-2 font-bold leading-snug"
+						initial={{ opacity: 0, y: -50 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 1 }}
+					>
+						Welcome to eChess,<br />
+						the ultimate<br />
+						online chess platform.
+					</motion.h1>
+					<motion.p
+						className="text-lg md:text-xl mt-4 mb-8 leading-relaxed"
+						initial={{ opacity: 0, x: -100 }}
+						animate={{ opacity: 1, x: 0 }}
+						transition={{ duration: 1, delay: 0.5 }}
+					>
+						Join us and experience the thrill of competitive<br />
+						chess, connect with fellow players,<br />
+						and showcase your skills.
+					</motion.p>
+					<motion.button
+						className="bg-blue text-white py-3 px-6 font-semibold rounded text-lg w-full md:w-auto transition duration-300 ease-in-out hover:bg-sky-500 hover:text-white hover:border-transparent"
+						onClick={handleStart}
+						initial={{ opacity: 0, scale: 0.8 }}
+						animate={{ opacity: 1, scale: 1 }}
+						transition={{
+							delay: 1,
+							duration: 1, 
+							ease: [0.25, 0.8, 0.25, 1], 
+						}}
+					>
+						Get Started
+					</motion.button>
+				</div>
 
-			<Features />
-			<Footer />
-		</section>
+			</section>
+			<Features/>
+			<Footer/>
+
+		</>
+		
 	);
 };
 
