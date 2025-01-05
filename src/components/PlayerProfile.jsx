@@ -95,7 +95,7 @@ const PlayerProfile = () => {
                             {/* Player Details */}
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-2xl font-semibold text-gray-800">
-                                    Fernando, Sanjana
+                                    Surname, Name
                                 </h2>
                                 <button className="text-gray-600 hover:text-gray-900">
                                     <img
