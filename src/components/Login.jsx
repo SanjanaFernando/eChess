@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../state/player-api";
 import { tokenDecode } from "../utils/token";
+import { loginUser } from "../state/user-api";
 
 const Login = () => {
 	const navigate = useNavigate();

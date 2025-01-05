@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerPlayer } from "../state/player-api";
+import { registerUser } from "../state/user-api";
 
 const Signup = () => {
 	const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Signup = () => {
 	const handleSignUp = async (event) => {
 		event.preventDefault();
 		try {
-			const response = await registerPlayer({
+			const response = await registerUser({
 				firstName,
 				lastName,
 				email,

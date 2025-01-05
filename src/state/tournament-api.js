@@ -35,3 +35,15 @@ export const getClassifiedTournaments = async () => {
         throw err;
     }
 }
+
+export const getTournamentsByStatus = async (data) => {
+    try {
+        // console.log(data);
+        const response = await axios.get(`${API_URL}/tournaments/tournament-by-status`, { params: { status: data.status, userId: data.userId } });
+        // console.log("tournaments from api call: ", response.data);
+        return response.data;
+    } catch (err) {
+        console.log("Error fetching tournaments by status: ", err.error);
+        return [];
+    }
+}
