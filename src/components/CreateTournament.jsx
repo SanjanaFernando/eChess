@@ -42,10 +42,12 @@ const CreateTournament = () => {
 		try {
 			const token = localStorage.getItem("token");
 			const decodedToken = tokenDecode(token);
+			// console.log(decodedToken.id);
 			const userId = decodedToken.id;
 			const organizer = await getOrganizerByUser(userId);
+			// console.log(organizer);
 			const organizerId = organizer.data._id;
-			console.log(organizerId);
+			// console.log(organizerId);
 
 			const ageDetails = sections
 				.filter(

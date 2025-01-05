@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getTournamentsByStatus } from "../state/tournament-api";
+import { getPlayerByUser, playerTournaments } from "../state/player-api";
+import { tokenDecode } from "../utils/token";
 
 const PlayerDashboard = () => {
 	const [activeTab, setActiveTab] = useState("Upcoming");
@@ -22,29 +25,23 @@ const PlayerDashboard = () => {
 	const fetchTournamentData = async (tab) => {
 		setLoading(true);
 		await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+
+		const token = localStorage.getItem("token");
+		const decodedToken = tokenDecode(token);
+
+		const upcomingTournaments = await getTournamentsByStatus({
+			status: "UPCOMING",
+			userId: decodedToken.id,
+		});
+		console.log(upcomingTournaments);
+
+		const registeredTournaments = await playerTournaments({
+			userId: decodedToken.id,
+		});
+		// console.log(registeredTournaments);
 		const data = {
-			Upcoming: [
-				{
-					name: "2024 Michigan Upper Peninsula Open",
-					club: "Utah Chess Association",
-					entryType: "Paid",
-					img: "/cup.png",
-				},
-				{
-					name: "Roger Hale Chess Celebration",
-					club: "Chess Castle of Minnesota",
-					entryType: "Free",
-					img: "/cup.png",
-				},
-			],
-			Registered: [
-				{
-					name: "2024 Farewell Bobby Fischer",
-					club: "Utah Chess Association",
-					entryType: "Paid",
-					img: "/cup.png",
-				},
-			],
+			Upcoming: upcomingTournaments,
+			Registered: registeredTournaments,
 			Ongoing: [
 				{
 					name: "74th Oregon Open",
@@ -224,7 +221,7 @@ const PlayerDashboard = () => {
 										{tournament.name}
 									</h3>
 									<p className="text-gray-600">
-										{tournament.club}
+										{tournament.organizerName}
 									</p>
 									<span
 										className={`text-white text-sm px-2 py-1 rounded-md ${
@@ -237,8 +234,18 @@ const PlayerDashboard = () => {
 									</span>
 								</div>
 							</div>
-							<button className="bg-blue-500 text-white px-4 py-2 rounded-md font-semibold">
-								{activeTab === "Upcoming" ? "Register" : "View"}
+							<button
+								className={`${
+									tournament.isPlayerRegistered
+										? "bg-green-500 px-7"
+										: "bg-blue-500"
+								} text-white px-4 py-2 rounded-md font-semibold`}
+							>
+								{activeTab === "Upcoming"
+									? tournament.isPlayerRegistered
+										? "View"
+										: "Register"
+									: "View"}
 							</button>
 						</div>
 					))

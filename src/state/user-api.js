@@ -19,9 +19,11 @@ export const loginUser = async (credentials) => {
         const response = await axios.post(`${API_URL}/auth/login`, credentials, {
             withCredentials: true, // If using cookies for session management
         });
+        // console.log(response.data);
         const { token, ...userData } = response.data;
 
         // Save token to local storage (or other secure storage as needed)
+        // console.log(token);
         localStorage.setItem('token', token);
 
         return userData; // Return user data after successful login
