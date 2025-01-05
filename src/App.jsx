@@ -13,6 +13,7 @@ import Organizerdashboardnew from "./components/Organizerdashboard";
 import CreateTournament from "./components/CreateTournament";
 import UpdateTournament from "./components/UpdateTournament";
 import PlayerProfile from "./components/PlayerProfile";
+import OrganizerPaymentPage from "./components/OrganizerPayment";
 
 const App = () => {
 	return (
@@ -52,6 +53,10 @@ const App = () => {
 						<Route
 							path="/pp"
 							element={<PlayerProfile />}
+						/>
+						<Route
+							path="/opay"
+							element={<OrganizerPaymentPage />}
 						/>
 					</Routes>
 				</main>
