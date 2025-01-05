@@ -28,13 +28,13 @@ const PlayerDashboard = () => {
 					name: "2024 Michigan Upper Peninsula Open",
 					club: "Utah Chess Association",
 					entryType: "Paid",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 				{
 					name: "Roger Hale Chess Celebration",
 					club: "Chess Castle of Minnesota",
 					entryType: "Free",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 			],
 			Registered: [
@@ -42,7 +42,7 @@ const PlayerDashboard = () => {
 					name: "2024 Farewell Bobby Fischer",
 					club: "Utah Chess Association",
 					entryType: "Paid",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 			],
 			Ongoing: [
@@ -50,7 +50,7 @@ const PlayerDashboard = () => {
 					name: "74th Oregon Open",
 					club: "Oregon Chess Federation",
 					entryType: "Paid",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 			],
 			Finished: [
@@ -58,7 +58,7 @@ const PlayerDashboard = () => {
 					name: "2023 Winter Chess Championship",
 					club: "California Chess Club",
 					entryType: "Free",
-					img: "https://via.placeholder.com/50",
+					img: "/cup.png",
 				},
 			],
 		};
