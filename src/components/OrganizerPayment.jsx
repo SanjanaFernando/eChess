@@ -150,20 +150,22 @@ const OrganizerPaymentPage = () => {
               </div>
             </div>
             {activeTab === "Unpaid" ? (
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => handleRejectClick(player.name)}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                >
-                  Reject
-                </button>
-                <button
-                  onClick={() => handleAcceptClick(player.name)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                >
-                  Accept
-                </button>
-              </div>
+              <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-center items-center">
+              <button
+                onClick={() => handleRejectClick(player.name)}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg w-24"
+              >
+                Reject
+              </button>
+              <button
+                onClick={() => handleAcceptClick(player.name)}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg w-24"
+              >
+                Accept
+              </button>
+            </div>
+            
+                
             ) : (
               <button className="text-green-500 font-medium">Paid</button>
             )}
