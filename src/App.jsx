@@ -33,7 +33,7 @@ const App = () => {
 							element={<SignupOrganizer />}
 						/>
 						<Route
-							path="/tr"
+							path="/tournament-registration/:id"
 							element={<TournamentRegistration />}
 						/>
 						<Route
