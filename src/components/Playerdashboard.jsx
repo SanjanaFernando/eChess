@@ -73,6 +73,15 @@ const PlayerDashboard = () => {
 		setActiveTab(tab);
 	};
 
+	const handleTournamentButtonClick = (tournament) => {
+		console.log("Tournament id: ", tournament._id);
+		if (!tournament.isPlayerRegistered) {
+			navigate(`/tournament-registration/${tournament._id}`);
+		} else {
+			navigate("#");
+		}
+	};
+
 	const handleLogout = (e) => {
 		e.preventDefault();
 		localStorage.removeItem("token");
@@ -235,10 +244,13 @@ const PlayerDashboard = () => {
 								</div>
 							</div>
 							<button
+								onClick={() =>
+									handleTournamentButtonClick(tournament)
+								}
 								className={`${
 									tournament.isPlayerRegistered
 										? "bg-green-500 px-7"
-										: "bg-blue-500"
+										: "bg-blue"
 								} text-white px-4 py-2 rounded-md font-semibold`}
 							>
 								{activeTab === "Upcoming"
