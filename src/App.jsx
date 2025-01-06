@@ -14,6 +14,7 @@ import CreateTournament from "./components/CreateTournament";
 import UpdateTournament from "./components/UpdateTournament";
 import PlayerProfile from "./components/PlayerProfile";
 import OrganizerPaymentPage from "./components/OrganizerPayment";
+import PlayerExpensePage from "./components/PlayerExpense";
 
 const App = () => {
 	return (
@@ -57,6 +58,10 @@ const App = () => {
 						<Route
 							path="/opay"
 							element={<OrganizerPaymentPage />}
+						/>
+						<Route
+							path="/ppay"
+							element={<PlayerExpensePage/>}
 						/>
 					</Routes>
 				</main>
