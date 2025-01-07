@@ -79,7 +79,7 @@ const Login = () => {
 					</div>
 					<button
 						type="submit"
-						className="w-full p-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-700"
+						className="w-full p-2 bg-blue text-white rounded mt-4 hover:bg-blue-700"
 					>
 						Log in
 					</button>
@@ -87,7 +87,7 @@ const Login = () => {
 				<div className="flex justify-between items-center mt-5">
 					<span className="text-white">Don't have an account?</span>
 					<Link to="/Signup">
-						<button className="border border-blue-500 text-blue-500 py-2 px-4 rounded hover:bg-blue-500 hover:text-white">
+						<button className="border border-blue text-blue py-2 px-4 rounded hover:bg-blue hover:text-white">
 							Sign Up
 						</button>
 					</Link>
