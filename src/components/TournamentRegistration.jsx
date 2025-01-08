@@ -4,6 +4,8 @@ import { getTournament, playerResitration } from "../state/tournament-api";
 import { tokenDecode } from "../utils/token";
 
 const TournamentRegistration = () => {
+	const API_URL = import.meta.env.VITE_API_URL;
+
 	const { id: tournamentId } = useParams();
 	const navigate = useNavigate();
 
@@ -79,13 +81,50 @@ const TournamentRegistration = () => {
 
 		try {
 			await playerResitration(tournamentId, payload);
-			console.log("Player registration successful");
+			console.log("Player registration Successful");
 			window.alert("Player Registration Successful!");
-			formData.paymentMethod === "MANUAL"
-				? navigate("/player-dashboard")
-				: navigate("/payment-gateway");
+
+			if (formData.paymentMethod === "MANUAL") {
+				navigate("/player-dashboard");
+			} else {
+				try {
+					const response = await fetch(
+						`${API_URL}/checkout/create-checkout-session`,
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify({
+								tournamentName: tournament.name,
+								registrationFee: formData.paymentAmount,
+							}),
+						}
+					);
+
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(
+							errorData.error ||
+								"Failed to create checkout session"
+						);
+					}
+
+					const { url } = await response.json();
+					window.location = url;
+				} catch (fetchError) {
+					console.log(
+						"Error creating checkout session:",
+						fetchError.message
+					);
+					window.alert(
+						"Failed to initiate payment. Please try again."
+					);
+				}
+			}
 		} catch (err) {
 			console.log("Error registering for tournament: ", err.message);
+			window.alert("Registration failed. Please try again.");
 		} finally {
 			setSubmitting(false);
 		}
