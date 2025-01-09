@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { createTournament } from "../state/tournament-api.js";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getOrganizerByUser } from "../state/organizer-api.js";
 import { tokenDecode } from "../utils/token.js";
 
 const CreateTournament = () => {
+	const locationPath = useLocation();
+	const isTournamentCreateTab =
+		locationPath.pathname === "/create-tournament";
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [sections, setSections] = useState([
 		{ ageGroup: "", yearRange: "", fee: "" },
@@ -94,13 +97,21 @@ const CreateTournament = () => {
 					</div>
 				</h1>
 				<div className="flex space-x-8">
-					<a href="#" className="text-gray-800 font-medium">
+					<a
+						href="/create-tournament"
+						className={`text-gray-800 font-medium ${
+							isTournamentCreateTab ? "font-extrabold" : ""
+						}`}
+					>
 						Create
 					</a>
-					<a href="#" className="text-gray-800 font-medium">
+					<a
+						href="/organizer-dashboard"
+						className="text-gray-800 font-medium"
+					>
 						Tournaments
 					</a>
-					<a href="#" className="text-gray-800 font-medium">
+					<a href="/opay" className="text-gray-800 font-medium">
 						Payments
 					</a>
 				</div>

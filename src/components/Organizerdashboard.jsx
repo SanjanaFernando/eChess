@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getClassifiedTournaments } from "../state/tournament-api";
 
 const TournamentsPage = () => {
+	const location = useLocation();
+	const isTournamentsTab = location.pathname === "/organizer-dashboard";
 	const [activeTab, setActiveTab] = useState("Upcoming");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedFilters, setSelectedFilters] = useState({
@@ -218,10 +220,15 @@ const TournamentsPage = () => {
 					>
 						Create
 					</a>
-					<a href="#" className="text-gray-800 font-medium">
+					<a
+						href="#"
+						className={`text-gray-800 font-medium ${
+							isTournamentsTab ? "font-extrabold" : ""
+						}`}
+					>
 						Tournaments
 					</a>
-					<a href="#" className="text-gray-800 font-medium">
+					<a href="/opay" className="text-gray-800 font-medium">
 						Payments
 					</a>
 				</div>

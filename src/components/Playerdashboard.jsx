@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getTournamentsByStatus } from "../state/tournament-api";
 import { getPlayerByUser, playerTournaments } from "../state/player-api";
 import { tokenDecode } from "../utils/token";
 
 const PlayerDashboard = () => {
+	const location = useLocation();
+	const isTournamentsTab = location.pathname === "/player-dashboard";
+
 	const [activeTab, setActiveTab] = useState("Upcoming");
 	const [tournaments, setTournaments] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -102,13 +105,18 @@ const PlayerDashboard = () => {
 					</div>
 				</h1>
 				<div className="flex space-x-8">
-					<a href="#" className="text-gray-800 font-medium">
-						Create
+					<a href="/chessgame" className="text-gray-800 font-medium">
+						Play
 					</a>
-					<a href="#" className="text-gray-800 font-medium">
+					<a
+						href="#"
+						className={`text-gray-800 font-medium ${
+							isTournamentsTab ? "font-extrabold" : ""
+						}`}
+					>
 						Tournaments
 					</a>
-					<a href="#" className="text-gray-800 font-medium">
+					<a href="/ppay" className="text-gray-800 font-medium">
 						Payments
 					</a>
 				</div>

@@ -96,6 +96,8 @@ const TournamentRegistration = () => {
 								"Content-Type": "application/json",
 							},
 							body: JSON.stringify({
+								userId: userId,
+								tournamentId: tournamentId,
 								tournamentName: tournament.name,
 								registrationFee: formData.paymentAmount,
 							}),
