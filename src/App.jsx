@@ -19,38 +19,62 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
 
 const App = () => {
-  return (
-    <Router>
-      <div>
-        <main>
-          <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/chessgame" element={<ChessGame />} />
-            <Route path="/player-dashboard" element={<PlayerDashboard />} />
-            <Route path="/signup-organizer" element={<SignupOrganizer />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-cancel" element={<PaymentCancel />} />
-            <Route
-              path="/tournament-registration/:id"
-              element={<TournamentRegistration />}
-            />
-            <Route
-              path="/organizer-dashboard"
-              element={<Organizerdashboardnew />}
-            />
-            <Route path="/create-tournament" element={<CreateTournament />} />
-            <Route path="/update-tournament" element={<UpdateTournament />} />
-            <Route path="/pp" element={<PlayerProfile />} />
-            <Route path="/opay" element={<OrganizerPaymentPage />} />
-            <Route path="/ppay" element={<PlayerExpensePage />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
-  );
+	return (
+		<Router>
+			<div>
+				<main>
+					<Routes>
+						<Route path="/" element={<Hero />} />
+						<Route path="/login" element={<Login />} />
+						<Route path="/signup" element={<Signup />} />
+						<Route path="/payment" element={<Payment />} />
+						<Route path="/chessgame" element={<ChessGame />} />
+						<Route
+							path="/player-dashboard"
+							element={<PlayerDashboard />}
+						/>
+						<Route
+							path="/signup-organizer"
+							element={<SignupOrganizer />}
+						/>
+						<Route
+							path="/payment-success"
+							element={<PaymentSuccess />}
+						/>
+						<Route
+							path="/payment-cancel"
+							element={<PaymentCancel />}
+						/>
+						<Route
+							path="/tournament-registration/:id"
+							element={<TournamentRegistration />}
+						/>
+						<Route
+							path="/organizer-dashboard"
+							element={<Organizerdashboardnew />}
+						/>
+						<Route
+							path="/create-tournament"
+							element={<CreateTournament />}
+						/>
+						<Route
+							path="/update-tournament"
+							element={<UpdateTournament />}
+						/>
+						<Route
+							path="/profile/:id"
+							element={<PlayerProfile />}
+						/>
+						<Route
+							path="/organizer-payments/:id"
+							element={<OrganizerPaymentPage />}
+						/>
+						<Route path="/ppay" element={<PlayerExpensePage />} />
+					</Routes>
+				</main>
+			</div>
+		</Router>
+	);
 };
 
 export default App;

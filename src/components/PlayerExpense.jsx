@@ -1,14 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getPlayerTournamentRegistrations } from "../state/player-api";
+import { tokenDecode } from "../utils/token";
 
 const PlayerExpensePage = () => {
+	const token = localStorage.getItem("token");
+	const decodedToken = tokenDecode(token);
+	const userId = decodedToken.id;
+
 	const location = useLocation();
 	const isPlayerPaymentTab = location.pathname === "/ppay";
-	const registeredTournaments = [
-		{ name: "Chess Tournament A", fee: 1500 },
-		{ name: "Chess Tournament B", fee: 2000 },
-		{ name: "Chess Tournament C", fee: 1200 },
-	];
+
+	const [registeredTournaments, setRegisteredTournaments] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+
+	// const registeredTournaments = [
+	// 	{ name: "Chess Tournament A", paymentStatus: "PENDING", fee: 1500 },
+	// 	{ name: "Chess Tournament B", paymentStatus: "COMPLETED", fee: 2000 },
+	// 	{ name: "Chess Tournament C", paymentStatus: "COMPLETED", fee: 1200 },
+	// ];
+
+	useEffect(() => {
+		const fetchTournamentRegistrations = async () => {
+			try {
+				const res = await getPlayerTournamentRegistrations(userId);
+				setRegisteredTournaments(res);
+			} catch (err) {
+				console.error(
+					"Error fetching player tournament registrations: ",
+					err
+				);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchTournamentRegistrations();
+	}, [userId]);
 
 	const totalExpenses = registeredTournaments.reduce(
 		(total, tournament) => total + tournament.fee,
@@ -64,6 +93,17 @@ const PlayerExpensePage = () => {
 							<div>
 								<p className="font-medium text-gray-800">
 									{tournament.name}
+								</p>
+							</div>
+							<div>
+								<p
+									className={`text-white text-sm px-2 py-1 rounded-md ${
+										tournament.paymentStatus === "PENDING"
+											? "bg-red-500"
+											: "bg-green-500"
+									}`}
+								>
+									{tournament.paymentStatus}
 								</p>
 							</div>
 							<div>

@@ -1,9 +1,22 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { getPlayersByPaymentStatus } from "../state/player-api";
+import {
+	acceptPlayerRegistration,
+	revokePlayerRegistration,
+} from "../state/tournament-api";
 
 const OrganizerPaymentPage = () => {
 	const location = useLocation();
 	const isOrganizerPayment = location.pathname === "/opay";
+
+	const params = useParams();
+	const tournamentId = params.id;
+	const [paidPlayers, setPaidPlayers] = useState([]);
+	const [unpaidPlayers, setUnpaidPlayers] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+
 	const [activeTab, setActiveTab] = useState("Paid");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filters, setFilters] = useState({
@@ -12,28 +25,33 @@ const OrganizerPaymentPage = () => {
 		entry: "",
 	});
 
-	const paidPlayers = [
-		{ name: "Herath H L M B", fideId: "486477", rating: "1402" },
-		{ name: "Player 2", fideId: "123456", rating: "1500" },
-	];
+	useEffect(() => {
+		const fetchPlayers = async () => {
+			try {
+				console.log(tournamentId);
+				const res = await getPlayersByPaymentStatus(tournamentId);
+				setPaidPlayers(res.COMPLETED);
+				setUnpaidPlayers(res.PENDING);
+				console.log("Paid players: ", res.COMPLETED);
+				console.log("Unpaid players: ", res.PENDING);
+			} catch (err) {
+				setError("Error fetching players by payment status");
+				console.error(
+					"Error fetching players by payment status: ",
+					err
+				);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-	const unpaidPlayers = [
-		{ name: "Player 3", fideId: "789012", rating: "1300" },
-		{ name: "Player 4", fideId: "345678", rating: "1250" },
-	];
+		fetchPlayers();
+	}, [tournamentId]);
 
 	const players = activeTab === "Paid" ? paidPlayers : unpaidPlayers;
 
 	const handleTabClick = (tab) => {
 		setActiveTab(tab);
-	};
-
-	const handleAcceptClick = (name) => {
-		console.log(`Accepted: ${name}`);
-	};
-
-	const handleRejectClick = (name) => {
-		console.log(`Rejected: ${name}`);
 	};
 
 	const handleSearchChange = (e) => {
@@ -43,6 +61,40 @@ const OrganizerPaymentPage = () => {
 	const handleFilterChange = (key, value) => {
 		setFilters((prevFilters) => ({ ...prevFilters, [key]: value }));
 	};
+
+	const handleRevokeClick = async (playerId) => {
+		try {
+			await revokePlayerRegistration(tournamentId, playerId);
+			setUnpaidPlayers((prev) =>
+				prev.filter((player) => player.playerId !== playerId)
+			);
+		} catch (err) {
+			console.error("Error revoking player registration: ", err);
+		}
+	};
+
+	const handleAcceptClick = async (playerId) => {
+		try {
+			await acceptPlayerRegistration(tournamentId, playerId);
+			setUnpaidPlayers((prev) =>
+				prev.filter((player) => player.playerId !== playerId)
+			);
+			setPaidPlayers((prev) => [
+				...prev,
+				{
+					...unpaidPlayers.find(
+						(player) => player.playerId === playerId
+					),
+				},
+			]);
+		} catch (err) {
+			console.error("Error accepting player: ", err);
+		}
+	};
+
+	if (loading) return <div>Loading...</div>;
+
+	if (error) return <div>{error}</div>;
 
 	return (
 		<div className="bg-gray-100 min-h-screen p-6">
@@ -158,57 +210,63 @@ const OrganizerPaymentPage = () => {
 
 			{/* Player Cards */}
 			<div className="space-y-4 mt-6">
-				{players.map((player, index) => (
-					<div
-						key={index}
-						className="bg-white p-4 rounded-md shadow flex justify-between items-center"
-					>
-						<div className="flex items-center">
-							<div className="bg-gray-200 rounded-full p-4">
-								<img
-									src="/User2.png"
-									alt="User Icon"
-									className="h-10 w-10 rounded-full"
-								/>
-							</div>
-							<div className="ml-4">
-								<p className="font-semibold text-gray-800">
-									{player.name}
-								</p>
-								<p className="text-gray-600">
-									FIDE ID: {player.fideId}
-								</p>
-								<p className="text-gray-600">
-									FIDE Rating: {player.rating}
-								</p>
-							</div>
-						</div>
-						{activeTab === "Unpaid" ? (
-							<div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-center items-center">
-								<button
-									onClick={() =>
-										handleRejectClick(player.name)
-									}
-									className="px-4 py-2 bg-red-500 text-white rounded-lg w-24"
-								>
-									Reject
-								</button>
-								<button
-									onClick={() =>
-										handleAcceptClick(player.name)
-									}
-									className="px-4 py-2 bg-green-500 text-white rounded-lg w-24"
-								>
-									Accept
-								</button>
-							</div>
-						) : (
-							<button className="text-green-500 font-medium">
-								Paid
-							</button>
-						)}
+				{players.length === 0 ? (
+					<div className="text-center text-gray-500 py-4">
+						No players available...
 					</div>
-				))}
+				) : (
+					players.map((player, index) => (
+						<div
+							key={index}
+							className="bg-white p-4 rounded-md shadow flex justify-between items-center"
+						>
+							<div className="flex items-center">
+								<div className="bg-gray-200 rounded-full p-4">
+									<img
+										src="/User2.png"
+										alt="User Icon"
+										className="h-10 w-10 rounded-full"
+									/>
+								</div>
+								<div className="ml-4">
+									<p className="font-semibold text-gray-800">
+										{player.nameWithInitials}
+									</p>
+									<p className="text-gray-600">
+										FIDE ID: {player.fideId}
+									</p>
+									<p className="text-gray-600">
+										FIDE Rating: {player.fideRating}
+									</p>
+								</div>
+							</div>
+							{activeTab === "Unpaid" ? (
+								<div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-center items-center">
+									<button
+										onClick={() =>
+											handleRevokeClick(player.playerId)
+										}
+										className="px-4 py-2 bg-red-500 text-white rounded-lg w-24"
+									>
+										Reject
+									</button>
+									<button
+										onClick={() =>
+											handleAcceptClick(player.playerId)
+										}
+										className="px-4 py-2 bg-green-500 text-white rounded-lg w-24"
+									>
+										Accept
+									</button>
+								</div>
+							) : (
+								<button className="text-green-500 font-medium">
+									Paid
+								</button>
+							)}
+						</div>
+					))
+				)}
 			</div>
 		</div>
 	);

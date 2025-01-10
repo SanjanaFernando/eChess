@@ -86,3 +86,33 @@ export const playerResitration = async (tournamentId, registrationData) => {
         throw err;
     }
 }
+
+export const revokePlayerRegistration = async (tournamentId, playerId) => {
+    try {
+        const response = await axios.delete(`${API_URL}/tournaments/remove-player-registration`, {
+            params: {
+                tournamentId: tournamentId,
+                playerId: playerId,
+            }
+        })
+        console.log(response.data);
+        return response.data;
+    } catch (err) {
+        console.error(`Error removing player from registration: `, err);
+        throw err;
+    }
+}
+
+export const acceptPlayerRegistration = async (tournamentId, playerId) => {
+    try {
+        console.log("PlayerId: ", playerId);
+        console.log("TournamentId: ", tournamentId);
+        const response = await axios.put(`${API_URL}/tournaments/accept-player-registration`, null, {
+            params: { tournamentId, playerId }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error accepting player registration: ', error);
+        throw error;
+    }
+};

@@ -45,3 +45,28 @@ export const playerTournaments = async (data) => {
         console.error("Error fetching registered tournaments: ", err.error);
     }
 }
+
+export const getPlayersByPaymentStatus = async (tournamentId) => {
+    try {
+        console.log("Tournament Id from api call: ", tournamentId);
+        const response = await axios.get(`${API_URL}/players/players-by-payments`, {
+            params: { tournamentId }
+        });
+        return response.data;
+    } catch (err) {
+        console.error('Error fetching players by payment status: ', err);
+        throw err;
+    }
+}
+
+export const getPlayerTournamentRegistrations = async (userId) => {
+    try {
+        const response = await axios.get(`${API_URL}/players/get-player-tournament-registrations`, {
+            params: { userId }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tournament registrations:', error);
+        throw error;
+    }
+};
