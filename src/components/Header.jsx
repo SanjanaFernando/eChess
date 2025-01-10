@@ -70,7 +70,7 @@ export default function Header() {
 					Tournaments
 				</Link>
 				<Link
-					to="/Payment"
+					to="/login"
 					className="mx-6 text-white no-underline text-xl text-center transition-transform duration-300 ease-in-out hover:text-purple-300 hover:scale-105"
 				>
 					Payments

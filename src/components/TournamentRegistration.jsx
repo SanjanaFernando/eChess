@@ -158,12 +158,18 @@ const TournamentRegistration = () => {
 				<nav className="mt-4 sm:mt-0">
 					<ul className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-16">
 						<li>
-							<a href="#" className="text-black hover:underline">
+							<a
+								href="/player-dashboard"
+								className="text-black hover:underline"
+							>
 								Tournaments
 							</a>
 						</li>
 						<li>
-							<a href="#" className="text-black hover:underline">
+							<a
+								href="/ppay"
+								className="text-black hover:underline"
+							>
 								Payments
 							</a>
 						</li>

@@ -91,8 +91,15 @@ const PlayerDashboard = () => {
 			navigate("#");
 		}
 	};
+  
+  const handleProfileView = (e) => {
+		const token = localStorage.getItem("token");
+		const decodedToken = tokenDecode(token);
+		e.preventDefault();
+		navigate(`/profile/${decodedToken.id}`);
+	};
 
-	// Handle logout
+
 	const handleLogout = (e) => {
 		e.preventDefault();
 		localStorage.removeItem("token");
@@ -147,8 +154,8 @@ const PlayerDashboard = () => {
 							<ul className="py-1">
 								<li>
 									<a
-										href="/profile"
 										className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+										onClick={handleProfileView}
 									>
 										Profile
 									</a>

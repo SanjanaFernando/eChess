@@ -322,7 +322,7 @@ const CreateTournament = () => {
 									<button
 										type="button"
 										onClick={addSection}
-										className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 transition"
+										className="p-2 bg-transparent text-black border border-5 border-black rounded-full hover:bg-blue hover:border-white hover:text-white transition"
 									>
 										+
 									</button>
@@ -419,7 +419,7 @@ const CreateTournament = () => {
 
 						<button
 							type="submit"
-							className="w-full bg-blue-600 text-white p-4 rounded-lg font-bold hover:bg-blue-800 transition duration-300 mt-4"
+							className="w-full bg-blue text-white p-4 rounded-lg font-bold hover:bg-sky-700 transition duration-300 mt-4"
 						>
 							Create
 						</button>

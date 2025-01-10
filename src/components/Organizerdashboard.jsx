@@ -90,6 +90,10 @@ const TournamentsPage = () => {
 		navigate("/create-tournament");
 	};
 
+	const handleViewButtonClick = (tournamentId) => {
+		navigate(`/organizer-payments/${tournamentId}`);
+	};
+
 	const TournamentTable = ({ tournaments }) => (
 		<div className="bg-white mt-4 p-6 rounded-md shadow-md">
 			<table className="min-w-full border border-gray-300">
@@ -184,7 +188,7 @@ const TournamentsPage = () => {
 							<td className="p-4 text-blue-500 text-right">
 								<button
 									onClick={() =>
-										handleEditClick(tournament.name)
+										handleViewButtonClick(tournament.id)
 									}
 									className="flex items-center space-x-1"
 								>
