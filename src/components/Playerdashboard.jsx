@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getTournamentsByStatus } from "../state/tournament-api";
-import { getPlayerByUser, playerTournaments } from "../state/player-api";
+import { playerTournaments } from "../state/player-api";
 import { tokenDecode } from "../utils/token";
 
 const PlayerDashboard = () => {
@@ -24,7 +24,7 @@ const PlayerDashboard = () => {
 		setIsDropdownOpen(false);
 	};
 
-	// Mock functions to simulate API calls for each tab
+	// Fetch tournament data
 	const fetchTournamentData = async (tab) => {
 		setLoading(true);
 		await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
@@ -32,16 +32,22 @@ const PlayerDashboard = () => {
 		const token = localStorage.getItem("token");
 		const decodedToken = tokenDecode(token);
 
-		const upcomingTournaments = await getTournamentsByStatus({
+		// Fetch data from APIs
+		const upcomingTournamentsRaw = await getTournamentsByStatus({
 			status: "UPCOMING",
 			userId: decodedToken.id,
 		});
-		console.log(upcomingTournaments);
-
 		const registeredTournaments = await playerTournaments({
 			userId: decodedToken.id,
 		});
-		// console.log(registeredTournaments);
+
+		// Add trophy.png to Upcoming tournaments
+		const upcomingTournaments = upcomingTournamentsRaw.map((tournament) => ({
+			...tournament,
+			img: "/trophy.png",
+		}));
+
+		// Mock data for other tabs
 		const data = {
 			Upcoming: upcomingTournaments,
 			Registered: registeredTournaments,
@@ -62,6 +68,7 @@ const PlayerDashboard = () => {
 				},
 			],
 		};
+
 		setTournaments(data[tab] || []);
 		setLoading(false);
 	};
@@ -76,8 +83,8 @@ const PlayerDashboard = () => {
 		setActiveTab(tab);
 	};
 
+	// Handle tournament button click
 	const handleTournamentButtonClick = (tournament) => {
-		console.log("Tournament id: ", tournament._id);
 		if (!tournament.isPlayerRegistered) {
 			navigate(`/tournament-registration/${tournament._id}`);
 		} else {
@@ -85,6 +92,7 @@ const PlayerDashboard = () => {
 		}
 	};
 
+	// Handle logout
 	const handleLogout = (e) => {
 		e.preventDefault();
 		localStorage.removeItem("token");
