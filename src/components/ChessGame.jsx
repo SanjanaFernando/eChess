@@ -1,87 +1,87 @@
-import '../App.css';
-import { useState, useEffect } from 'react';
-import { Chessboard } from 'react-chessboard';
-import { Chess } from 'chess.js';
+import "../App.css";
+import { useState, useEffect } from "react";
+import { Chessboard } from "react-chessboard";
+import { Chess } from "chess.js";
 
 function ChessGame() {
-    const [game, setGame] = useState(new Chess());
-    const [winner, setWinner] = useState(null);
-    const [gameOver, setGameOver] = useState(false);
-  
-    // perform a function on the game state
-    function safeGameMutate(modify) {
-      setGame((g) => {
-        const update = { ...g };
-        modify(update);
-        return update;
-      });
+  const [game, setGame] = useState(new Chess());
+  const [winner, setWinner] = useState(null);
+  const [gameOver, setGameOver] = useState(false);
+
+  // perform a function on the game state
+  function safeGameMutate(modify) {
+    setGame((g) => {
+      const update = { ...g };
+      modify(update);
+      return update;
+    });
+  }
+
+  // Movement of computer
+  function makeRandomMove() {
+    const possibleMove = game.moves();
+
+    // exit if the game is over
+    if (game.game_over() || game.in_draw() || possibleMove.length === 0) {
+      setGameOver(true);
+      const winner = game.turn() === "w" ? "Black" : "White";
+      setWinner(winner);
+      return;
     }
-  
-    // Movement of computer
-    function makeRandomMove() {
-      const possibleMove = game.moves();
-  
-      // exit if the game is over
-      if (game.game_over() || game.in_draw() || possibleMove.length === 0) {
-        setGameOver(true);
-        const winner = game.turn() === 'w' ? 'Black' : 'White';
-        setWinner(winner);
-        return;
+
+    // select random move
+    const randomIndex = Math.floor(Math.random() * possibleMove.length);
+    // play random move
+    safeGameMutate((game) => {
+      game.move(possibleMove[randomIndex]);
+    });
+  }
+
+  // Perform an action when a piece is dropped by a user
+  function onDrop(source, target) {
+    if (gameOver) return false;
+
+    let move = null;
+    safeGameMutate((game) => {
+      move = game.move({
+        from: source,
+        to: target,
+        promotion: "q",
+      });
+    });
+    // illegal move
+    if (move === null) return false;
+    // valid move
+    setTimeout(makeRandomMove, 200);
+    return true;
+  }
+
+  // Reset the game
+  function restartGame() {
+    setGame(new Chess());
+    setGameOver(false);
+    setWinner(null);
+  }
+
+  // Listen for Enter key press to restart the game
+  useEffect(() => {
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        restartGame();
       }
-  
-      // select random move
-      const randomIndex = Math.floor(Math.random() * possibleMove.length);
-      // play random move
-      safeGameMutate((game) => {
-        game.move(possibleMove[randomIndex]);
-      });
     }
-  
-    // Perform an action when a piece is dropped by a user
-    function onDrop(source, target) {
-      if (gameOver) return false;
-  
-      let move = null;
-      safeGameMutate((game) => {
-        move = game.move({
-          from: source,
-          to: target,
-          promotion: 'q',
-        });
-      });
-      // illegal move
-      if (move === null) return false;
-      // valid move
-      setTimeout(makeRandomMove, 200);
-      return true;
-    }
-  
-    // Reset the game
-    function restartGame() {
-      setGame(new Chess());
-      setGameOver(false);
-      setWinner(null);
-    }
-  
-    // Listen for Enter key press to restart the game
-    useEffect(() => {
-      function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-          restartGame();
-        }
-      }
-      window.addEventListener('keydown', handleKeyPress);
-      return () => {
-        window.removeEventListener('keydown', handleKeyPress);
-      };
-    }, []);
-  
-    return (
-      <div className="app">
-        <div className="header">
-          <img src="DarkLogo.png" 
-          alt="Game Image" className="game-image" />
-        </div>
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
+  return (
+    <div className="app">
+      <div className="header">
+        <img src="DarkLogo.png" alt="Game Image" className="game-image" />
+      </div>
+      <div className="flex items-center justify-center min-h-screen bg-[#F1F0EE]">
         <div className="chessboard-container">
           <Chessboard position={game.fen()} onPieceDrop={onDrop} />
           {gameOver && (
@@ -93,7 +93,8 @@ function ChessGame() {
           )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
-export default ChessGame
+export default ChessGame;
