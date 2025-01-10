@@ -16,7 +16,7 @@ export const registerUser = async (userData) => {
 // Login API Call
 export const loginUser = async (credentials) => {
     try {
-        const response = await axios.post(`${API_URL}/auth/login`, credentials, {
+        const response = await axios.post(`${API_URL}/api/v1/auth/login`, credentials, {
             withCredentials: true, // If using cookies for session management
         });
         // console.log(response.data);

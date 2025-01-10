@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const createTournament = async (data) => {
     try {
         console.log(data);
-        const response = await axios.post(`${API_URL}/tournaments/`, data);
+        const response = await axios.post(`${API_URL}/api/v1/tournaments/`, data);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -16,7 +16,7 @@ export const createTournament = async (data) => {
 
 export const getTournaments = async () => {
     try {
-        const response = await axios.get(`${API_URL}/tournaments`);
+        const response = await axios.get(`${API_URL}/api/v1/tournaments`);
         // console.log(response.data);
         return response.data;
     } catch (err) {
@@ -27,7 +27,7 @@ export const getTournaments = async () => {
 
 export const getTournament = async (tournamentId) => {
     try {
-        const response = await axios.get(`${API_URL}/tournaments/${tournamentId}`);
+        const response = await axios.get(`${API_URL}/api/v1/tournaments/${tournamentId}`);
         // console.log("Tournament Data from API: ", response.data);
         return response.data;
     } catch (err) {
@@ -38,7 +38,7 @@ export const getTournament = async (tournamentId) => {
 
 export const getClassifiedTournaments = async () => {
     try {
-        const response = await axios.get(`${API_URL}/tournaments/classified-tournaments`);
+        const response = await axios.get(`${API_URL}/api/v1/tournaments/classified-tournaments`);
         // console.log("classified-tournaments: (from client)", response.data);
         return response.data;
     } catch (err) {
@@ -50,7 +50,7 @@ export const getClassifiedTournaments = async () => {
 export const getTournamentsByStatus = async (data) => {
     try {
         // console.log(data);
-        const response = await axios.get(`${API_URL}/tournaments/tournament-by-status`, { params: { status: data.status, userId: data.userId } });
+        const response = await axios.get(`${API_URL}/api/v1/tournaments/tournament-by-status`, { params: { status: data.status, userId: data.userId } });
         // console.log("tournaments from api call: ", response.data);
         return response.data;
     } catch (err) {
