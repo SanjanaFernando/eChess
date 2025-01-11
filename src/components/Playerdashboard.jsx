@@ -41,32 +41,42 @@ const PlayerDashboard = () => {
 			userId: decodedToken.id,
 		});
 
-		// Add trophy.png to Upcoming tournaments
+		// Add the same image to all tournament objects
 		const upcomingTournaments = upcomingTournamentsRaw.map((tournament) => ({
 			...tournament,
 			img: "/trophy.png",
 		}));
 
+		const registeredTournamentsWithImages = registeredTournaments.map((tournament) => ({
+			...tournament,
+			img: "/trophy.png",
+		}));
+
 		// Mock data for other tabs
+		const ongoingTournaments = [
+			{
+				name: "74th Oregon Open",
+				club: "Oregon Chess Federation",
+				entryType: "Paid",
+				img: "/trophy.png",
+			},
+		];
+
+		const finishedTournaments = [
+			{
+				name: "2023 Winter Chess Championship",
+				club: "California Chess Club",
+				entryType: "Free",
+				img: "/trophy.png",
+			},
+		];
+
+		// Combine data for all tabs
 		const data = {
 			Upcoming: upcomingTournaments,
-			Registered: registeredTournaments,
-			Ongoing: [
-				{
-					name: "74th Oregon Open",
-					club: "Oregon Chess Federation",
-					entryType: "Paid",
-					img: "/cup.png",
-				},
-			],
-			Finished: [
-				{
-					name: "2023 Winter Chess Championship",
-					club: "California Chess Club",
-					entryType: "Free",
-					img: "/cup.png",
-				},
-			],
+			Registered: registeredTournamentsWithImages,
+			Ongoing: ongoingTournaments,
+			Finished: finishedTournaments,
 		};
 
 		setTournaments(data[tab] || []);
