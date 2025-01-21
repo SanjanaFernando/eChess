@@ -41,4 +41,24 @@ export const getUser = async (userId) => {
         console.error("Error fetching user: ", err);
         throw err.response ? err.response.data : error.message;
     }
+};
+
+export const sendPasswordResetEmail = async (email) => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/forgot-password`, { email });
+        return response.data;
+    } catch (err) {
+        console.error("Error sending password reset email: ", err);
+        throw err;
+    }
+};
+
+export const resetPassword = async (token, password) => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/reset-password/${token}`, { password });
+        return response.data;
+    } catch (err) {
+        console.error("Error resetting password: ", err);
+        throw err;
+    }
 }
