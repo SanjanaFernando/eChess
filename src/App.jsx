@@ -17,6 +17,8 @@ import OrganizerPaymentPage from "./components/OrganizerPayment";
 import PlayerExpensePage from "./components/PlayerExpense";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 const App = () => {
 	return (
@@ -26,6 +28,14 @@ const App = () => {
 					<Routes>
 						<Route path="/" element={<Hero />} />
 						<Route path="/login" element={<Login />} />
+						<Route
+							path="/forgot-password"
+							element={<ForgotPassword />}
+						/>
+						<Route
+							path="reset-password/:token"
+							element={<ResetPassword />}
+						/>
 						<Route path="/signup" element={<Signup />} />
 						<Route path="/payment" element={<Payment />} />
 						<Route path="/chessgame" element={<ChessGame />} />
