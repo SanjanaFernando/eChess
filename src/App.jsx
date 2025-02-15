@@ -22,6 +22,8 @@ import ResetPassword from "./components/ResetPassword";
 import TournamentDashboardOn from "./components/player/Tournament_player_dashboard_ongoing";
 import TournamentDashboardUp from "./components/player/Tournament_player_dashboard_upcommng";
 import TournamentFinished from "./components/TournamentFinish";
+import OrganizerTournamentDashboardUp from "./components/organizer/Tournament_organizer_dashboard_upcomming";
+import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_player_dahboard_ongoing";
 
 const App = () => {
   return (
@@ -62,7 +64,9 @@ const App = () => {
             <Route path="/tpdu" element={<TournamentDashboardUp />} />
             <Route path="/tpdo" element={<TournamentDashboardOn />} />
             <Route path="/tf" element={<TournamentFinished />} />
-          </Routes>
+			<Route path="/todu" element={<OrganizerTournamentDashboardUp />} />
+			<Route path="/todo" element={<OrganizerTournamentDashboardOn/>} />
+		  </Routes>
         </main>
       </div>
     </Router>
