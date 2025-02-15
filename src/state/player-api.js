@@ -3,6 +3,11 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
 
 
+const getAuthHeader = () => {
+    const token = localStorage.getItem("token");
+    return { Authorization: `Bearer ${token}` };
+}
+
 export const registerPlayer = async (data) => {
     try {
         const response = await axios.post(`${API_URL}/auth/register`, data);
@@ -27,7 +32,9 @@ export const login = async (data) => {
 
 export const getPlayerByUser = async (userId) => {
     try {
-        const response = await axios.get(`${API_URL}/players/get-player-by-user/${userId}`);
+        const response = await axios.get(`${API_URL}/players/get-player-by-user/${userId}`, {
+            headers: getAuthHeader()
+        });
         return response.data;
     } catch (error) {
         console.error('Error retrieving organizer data...', error);
@@ -38,7 +45,9 @@ export const getPlayerByUser = async (userId) => {
 export const playerTournaments = async (data) => {
     try {
         const userId = data.userId;
-        const response = await axios.get(`${API_URL}/players/get-tournaments/${userId}`);
+        const response = await axios.get(`${API_URL}/players/get-tournaments/${userId}`, {
+            headers: getAuthHeader()
+        });
         console.log(response.data);
         return response.data;
     } catch (err) {
@@ -50,7 +59,8 @@ export const getPlayersByPaymentStatus = async (tournamentId) => {
     try {
         console.log("Tournament Id from api call: ", tournamentId);
         const response = await axios.get(`${API_URL}/players/players-by-payments`, {
-            params: { tournamentId }
+            params: { tournamentId },
+            headers: getAuthHeader()
         });
         return response.data;
     } catch (err) {
@@ -62,7 +72,8 @@ export const getPlayersByPaymentStatus = async (tournamentId) => {
 export const getPlayerTournamentRegistrations = async (userId) => {
     try {
         const response = await axios.get(`${API_URL}/players/get-player-tournament-registrations`, {
-            params: { userId }
+            params: { userId },
+            headers: getAuthHeader()
         });
         return response.data;
     } catch (error) {

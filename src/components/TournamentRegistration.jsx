@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTournament, playerResitration } from "../state/tournament-api";
 import { tokenDecode } from "../utils/token";
+import { fetchCountries } from "../utils/countries";
 
 const TournamentRegistration = () => {
 	const API_URL = import.meta.env.VITE_API_URL;
@@ -31,10 +32,26 @@ const TournamentRegistration = () => {
 		paymentMethod: "",
 		paymentStatus: "PENDING",
 	});
+	const [countries, setCountries] = useState([]);
+
+	useEffect(() => {
+		const getCountries = async () => {
+			try {
+			} catch (error) {
+				console.error("Error fetching countries: ", error);
+			}
+		};
+
+		getCountries();
+	}, []);
 
 	useEffect(() => {
 		const fetchTournament = async () => {
 			try {
+				const countries = await fetchCountries();
+				console.log(countries);
+				setCountries(countries);
+
 				const data = await getTournament(tournamentId);
 				// console.log("Tournament data: ", data);
 				setTournament(data);
@@ -407,16 +424,23 @@ const TournamentRegistration = () => {
 						>
 							Country
 						</label>
-						<input
-							type="text"
+						<select
 							id="country"
 							name="country"
 							value={formData.country}
-							placeholder="Sri Lanka"
 							className="w-full p-3 border border-gray-300 rounded"
 							onChange={handleChange}
 							required
-						/>
+						>
+							<option value="" disabled selected>
+								Select Your Country
+							</option>
+							{countries.map((country) => (
+								<option key={country.iso3} value={country.name}>
+									{country.name}
+								</option>
+							))}
+						</select>
 					</div>
 
 					<div className="mb-6">

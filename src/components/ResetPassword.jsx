@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { resetPassword } from "../state/user-api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ResetPassword = () => {
 	const { token } = useParams();
+	const navigate = useNavigate();
 	const [password, setPassword] = useState("");
 	const [message, setMessage] = useState("");
 	const [error, setError] = useState("");
@@ -14,6 +15,9 @@ const ResetPassword = () => {
 			await resetPassword(token, password);
 			setMessage("Password has been reset successfully.");
 			setError("");
+			setTimeout(() => {
+				navigate("/login");
+			}, 2000);
 		} catch (err) {
 			setError("Error resetting password. Please try again.");
 			setMessage("");
