@@ -10,7 +10,7 @@ const PlayerDashboard = () => {
 
 	const [activeTab, setActiveTab] = useState("Upcoming");
 	const [tournaments, setTournaments] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const navigate = useNavigate();
 
@@ -26,61 +26,69 @@ const PlayerDashboard = () => {
 
 	// Fetch tournament data
 	const fetchTournamentData = async (tab) => {
-		setLoading(true);
-		await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+		try {
+			await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
 
-		const token = localStorage.getItem("token");
-		const decodedToken = tokenDecode(token);
+			const token = localStorage.getItem("token");
+			const decodedToken = tokenDecode(token);
 
-		// Fetch data from APIs
-		const upcomingTournamentsRaw = await getTournamentsByStatus({
-			status: "UPCOMING",
-			userId: decodedToken.id,
-		});
-		const registeredTournaments = await playerTournaments({
-			userId: decodedToken.id,
-		});
+			// Fetch data from APIs
+			const upcomingTournamentsRaw = await getTournamentsByStatus({
+				status: "UPCOMING",
+				userId: decodedToken.id,
+			});
+			const registeredTournaments = await playerTournaments({
+				userId: decodedToken.id,
+			});
 
-		// Add the same image to all tournament objects
-		const upcomingTournaments = upcomingTournamentsRaw.map((tournament) => ({
-			...tournament,
-			img: "/trophy.png",
-		}));
+			// Add the same image to all tournament objects
+			const upcomingTournaments = upcomingTournamentsRaw.map(
+				(tournament) => ({
+					...tournament,
+					img: "/trophy.png",
+				})
+			);
 
-		const registeredTournamentsWithImages = registeredTournaments.map((tournament) => ({
-			...tournament,
-			img: "/trophy.png",
-		}));
+			const registeredTournamentsWithImages = registeredTournaments.map(
+				(tournament) => ({
+					...tournament,
+					img: "/trophy.png",
+				})
+			);
 
-		// Mock data for other tabs
-		const ongoingTournaments = [
-			{
-				name: "74th Oregon Open",
-				club: "Oregon Chess Federation",
-				entryType: "Paid",
-				img: "/trophy.png",
-			},
-		];
+			// Mock data for other tabs
+			const ongoingTournaments = [
+				{
+					name: "74th Oregon Open",
+					club: "Oregon Chess Federation",
+					entryType: "Paid",
+					img: "/trophy.png",
+				},
+			];
 
-		const finishedTournaments = [
-			{
-				name: "2023 Winter Chess Championship",
-				club: "California Chess Club",
-				entryType: "Free",
-				img: "/trophy.png",
-			},
-		];
+			const finishedTournaments = [
+				{
+					name: "2023 Winter Chess Championship",
+					club: "California Chess Club",
+					entryType: "Free",
+					img: "/trophy.png",
+				},
+			];
 
-		// Combine data for all tabs
-		const data = {
-			Upcoming: upcomingTournaments,
-			Registered: registeredTournamentsWithImages,
-			Ongoing: ongoingTournaments,
-			Finished: finishedTournaments,
-		};
+			// Combine data for all tabs
+			const data = {
+				Upcoming: upcomingTournaments,
+				Registered: registeredTournamentsWithImages,
+				Ongoing: ongoingTournaments,
+				Finished: finishedTournaments,
+			};
 
-		setTournaments(data[tab] || []);
-		setLoading(false);
+			setTournaments(data[tab] || []);
+		} catch (error) {
+			console.error("Error fetching tournaments: ", error);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	// Fetch data whenever the active tab changes
@@ -101,14 +109,13 @@ const PlayerDashboard = () => {
 			navigate("#");
 		}
 	};
-  
-  const handleProfileView = (e) => {
+
+	const handleProfileView = (e) => {
 		const token = localStorage.getItem("token");
 		const decodedToken = tokenDecode(token);
 		e.preventDefault();
 		navigate(`/profile/${decodedToken.id}`);
 	};
-
 
 	const handleLogout = (e) => {
 		e.preventDefault();

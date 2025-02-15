@@ -3,6 +3,9 @@ import { createTournament } from "../state/tournament-api.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOrganizerByUser } from "../state/organizer-api.js";
 import { tokenDecode } from "../utils/token.js";
+import DatePicker from "react-datepicker";
+import { format } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CreateTournament = () => {
 	const locationPath = useLocation();
@@ -36,6 +39,18 @@ const CreateTournament = () => {
 	// Add a new row for age group, year range, and fee
 	const addSection = () => {
 		setSections([...sections, { ageGroup: "", yearRange: "", fee: "" }]);
+	};
+
+	// Handle start date change
+	const handleStartDateChange = (date) => {
+		const formattedDate = format(date, "dd/MM/yyyy");
+		setStartDate(formattedDate);
+	};
+
+	// Handle end date change
+	const handleEndDateChange = (date) => {
+		const formattedDate = format(date, "dd/MM/yyyy");
+		setEndDate(formattedDate);
 	};
 
 	const onSubmit = async (event) => {
@@ -212,7 +227,24 @@ const CreateTournament = () => {
 								>
 									Start Date
 								</label>
-								<input
+								<DatePicker
+									selected={
+										startDate
+											? new Date(
+													startDate
+														.split("/")
+														.reverse()
+														.join("-")
+											  )
+											: null
+									}
+									onChange={handleStartDateChange}
+									dateFormat="dd/MM/yyyy"
+									placeholderText="DD/MM/YYYY"
+									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue"
+									required
+								/>
+								{/* <input
 									type="text"
 									id="startDate"
 									placeholder="DD/ MM / YY"
@@ -221,7 +253,7 @@ const CreateTournament = () => {
 									onChange={(event) => {
 										setStartDate(event.target.value);
 									}}
-								/>
+								/> */}
 							</div>
 							<div>
 								<label
@@ -230,7 +262,24 @@ const CreateTournament = () => {
 								>
 									End Date
 								</label>
-								<input
+								<DatePicker
+									selected={
+										endDate
+											? new Date(
+													endDate
+														.split("/")
+														.reverse()
+														.join("-")
+											  )
+											: null
+									}
+									onChange={handleEndDateChange}
+									dateFormat="dd/MM/yyyy"
+									placeholderText="DD/MM/YYYY"
+									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue"
+									required
+								/>
+								{/* <input
 									type="text"
 									id="endDate"
 									placeholder="DD/ MM / YY"
@@ -239,7 +288,7 @@ const CreateTournament = () => {
 									onChange={(event) => {
 										setEndDate(event.target.value);
 									}}
-								/>
+								/> */}
 							</div>
 						</div>
 
