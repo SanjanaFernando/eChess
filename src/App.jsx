@@ -17,6 +17,9 @@ import OrganizerPaymentPage from "./components/OrganizerPayment";
 import PlayerExpensePage from "./components/PlayerExpense";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
+import TournamentDashboardOn from "./components/player/Tournament_player_dashboard_ongoing";
+import TournamentDashboardUp from "./components/player/Tournament_player_dashboard_upcommng";
+import TournamentFinished from "./components/TournamentFinish";
 
 const App = () => {
   return (
@@ -46,6 +49,9 @@ const App = () => {
             <Route path="/pp" element={<PlayerProfile />} />
             <Route path="/opay" element={<OrganizerPaymentPage />} />
             <Route path="/ppay" element={<PlayerExpensePage />} />
+            <Route path="/tpdu" element={<TournamentDashboardUp />} />
+            <Route path="/tpdo" element={<TournamentDashboardOn />} />
+            <Route path="/tf" element={<TournamentFinished />} />
           </Routes>
         </main>
       </div>
