@@ -17,6 +17,8 @@ import OrganizerPaymentPage from "./components/OrganizerPayment";
 import PlayerExpensePage from "./components/PlayerExpense";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 import TournamentDashboardOn from "./components/player/Tournament_player_dashboard_ongoing";
 import TournamentDashboardUp from "./components/player/Tournament_player_dashboard_upcommng";
 import TournamentFinished from "./components/TournamentFinish";
@@ -28,6 +30,14 @@ const App = () => {
         <main>
           <Routes>
             <Route path="/" element={<Hero />} />
+            <Route
+							path="/forgot-password"
+							element={<ForgotPassword />}
+						/>
+						<Route
+							path="reset-password/:token"
+							element={<ResetPassword />}
+						/>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/payment" element={<Payment />} />
@@ -57,6 +67,7 @@ const App = () => {
       </div>
     </Router>
   );
+
 };
 
 export default App;
