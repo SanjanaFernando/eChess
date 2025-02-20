@@ -22,6 +22,9 @@ import ResetPassword from "./components/ResetPassword";
 import TournamentDashboardOn from "./components/player/Tournament_player_dashboard_ongoing";
 import TournamentDashboardUp from "./components/player/Tournament_player_dashboard_upcommng";
 import TournamentFinished from "./components/TournamentFinish";
+import OrganizerTournamentDashboardUp from "./components/organizer/Tournament_organizer_dashboard_upcomming";
+import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_player_dahboard_ongoing";
+import FinishedTournamentPage from "./components/player/Tournament_finished_player";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
@@ -42,32 +45,14 @@ const App = () => {
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />
 						<Route path="/payment" element={<Payment />} />
-						<Route
-							path="/chessgame"
-							element={
-								<ProtectedRoute
-									element={<ChessGame />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
+						<Route path="/chessgame" element={<ChessGame />} />
 						<Route
 							path="/player-dashboard"
-							element={
-								<ProtectedRoute
-									element={<PlayerDashboard />}
-									roles={["PLAYER"]}
-								/>
-							}
+							element={<PlayerDashboard />}
 						/>
 						<Route
 							path="/signup-organizer"
-							element={
-								<ProtectedRoute
-									element={<SignupOrganizer />}
-									roles={["ORGANIZER"]}
-								/>
-							}
+							element={<SignupOrganizer />}
 						/>
 						<Route
 							path="/payment-success"
@@ -79,59 +64,26 @@ const App = () => {
 						/>
 						<Route
 							path="/tournament-registration/:id"
-							element={
-								<ProtectedRoute
-									element={<TournamentRegistration />}
-									roles={["PLAYER"]}
-								/>
-							}
+							element={<TournamentRegistration />}
 						/>
 						<Route
 							path="/organizer-dashboard"
-							element={
-								<ProtectedRoute
-									element={<Organizerdashboardnew />}
-									roles={["ORGANIZER"]}
-								/>
-							}
+							element={<Organizerdashboardnew />}
 						/>
 						<Route
 							path="/create-tournament"
-							element={
-								<ProtectedRoute
-									element={<CreateTournament />}
-									roles={["ORGANIZER"]}
-								/>
-							}
+							element={<CreateTournament />}
 						/>
 						<Route
 							path="/update-tournament"
-							element={
-								<ProtectedRoute
-									element={<UpdateTournament />}
-									roles={["ORGANIZER"]}
-								/>
-							}
+							element={<UpdateTournament />}
 						/>
 						<Route path="/pp" element={<PlayerProfile />} />
 						<Route
 							path="/opay"
-							element={
-								<ProtectedRoute
-									element={<OrganizerPaymentPage />}
-									roles={["ORGANIZER"]}
-								/>
-							}
+							element={<OrganizerPaymentPage />}
 						/>
-						<Route
-							path="/ppay"
-							element={
-								<ProtectedRoute
-									element={<PlayerExpensePage />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
+						<Route path="/ppay" element={<PlayerExpensePage />} />
 						<Route
 							path="/tpdu"
 							element={<TournamentDashboardUp />}
