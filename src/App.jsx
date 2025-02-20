@@ -22,15 +22,16 @@ import ResetPassword from "./components/ResetPassword";
 import TournamentDashboardOn from "./components/player/Tournament_player_dashboard_ongoing";
 import TournamentDashboardUp from "./components/player/Tournament_player_dashboard_upcommng";
 import TournamentFinished from "./components/TournamentFinish";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-  return (
-    <Router>
-      <div>
-        <main>
-          <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route
+	return (
+		<Router>
+			<div>
+				<main>
+					<Routes>
+						<Route path="/" element={<Hero />} />
+						<Route
 							path="/forgot-password"
 							element={<ForgotPassword />}
 						/>
@@ -38,36 +39,113 @@ const App = () => {
 							path="reset-password/:token"
 							element={<ResetPassword />}
 						/>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/chessgame" element={<ChessGame />} />
-            <Route path="/player-dashboard" element={<PlayerDashboard />} />
-            <Route path="/signup-organizer" element={<SignupOrganizer />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-cancel" element={<PaymentCancel />} />
-            <Route
-              path="/tournament-registration/:id"
-              element={<TournamentRegistration />}
-            />
-            <Route
-              path="/organizer-dashboard"
-              element={<Organizerdashboardnew />}
-            />
-            <Route path="/create-tournament" element={<CreateTournament />} />
-            <Route path="/update-tournament" element={<UpdateTournament />} />
-            <Route path="/pp" element={<PlayerProfile />} />
-            <Route path="/opay" element={<OrganizerPaymentPage />} />
-            <Route path="/ppay" element={<PlayerExpensePage />} />
-            <Route path="/tpdu" element={<TournamentDashboardUp />} />
-            <Route path="/tpdo" element={<TournamentDashboardOn />} />
-            <Route path="/tf" element={<TournamentFinished />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
-  );
-
+						<Route path="/login" element={<Login />} />
+						<Route path="/signup" element={<Signup />} />
+						<Route path="/payment" element={<Payment />} />
+						<Route
+							path="/chessgame"
+							element={
+								<ProtectedRoute
+									element={<ChessGame />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/player-dashboard"
+							element={
+								<ProtectedRoute
+									element={<PlayerDashboard />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/signup-organizer"
+							element={
+								<ProtectedRoute
+									element={<SignupOrganizer />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/payment-success"
+							element={<PaymentSuccess />}
+						/>
+						<Route
+							path="/payment-cancel"
+							element={<PaymentCancel />}
+						/>
+						<Route
+							path="/tournament-registration/:id"
+							element={
+								<ProtectedRoute
+									element={<TournamentRegistration />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/organizer-dashboard"
+							element={
+								<ProtectedRoute
+									element={<Organizerdashboardnew />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/create-tournament"
+							element={
+								<ProtectedRoute
+									element={<CreateTournament />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/update-tournament"
+							element={
+								<ProtectedRoute
+									element={<UpdateTournament />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+						/>
+						<Route path="/pp" element={<PlayerProfile />} />
+						<Route
+							path="/opay"
+							element={
+								<ProtectedRoute
+									element={<OrganizerPaymentPage />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/ppay"
+							element={
+								<ProtectedRoute
+									element={<PlayerExpensePage />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
+						<Route
+							path="/tpdu"
+							element={<TournamentDashboardUp />}
+						/>
+						<Route
+							path="/tpdo"
+							element={<TournamentDashboardOn />}
+						/>
+						<Route path="/tf" element={<TournamentFinished />} />
+					</Routes>
+				</main>
+			</div>
+		</Router>
+	);
 };
 
 export default App;

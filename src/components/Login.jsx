@@ -19,9 +19,11 @@ const Login = () => {
 				localStorage.setItem("token", response.token);
 				const decodedToken = tokenDecode(response.token);
 				const userRole = decodedToken.role;
-				userRole == "ORGANIZER"
-					? navigate("/organizer-dashboard")
-					: navigate("/player-dashboard");
+				if (userRole === "ORGANIZER") {
+					navigate("/organizer-dashboard");
+				} else if (userRole === "PLAYER") {
+					navigate("/player-dashboard");
+				}
 			}
 
 			console.log("Logged in successfully");
