@@ -24,6 +24,7 @@ import TournamentDashboardUp from "./components/player/Tournament_player_dashboa
 import TournamentFinished from "./components/TournamentFinish";
 import OrganizerTournamentDashboardUp from "./components/organizer/Tournament_organizer_dashboard_upcomming";
 import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_player_dahboard_ongoing";
+import FinishedTournamentPage from "./components/player/Tournament_finished_player";
 
 const App = () => {
   return (
@@ -63,7 +64,7 @@ const App = () => {
             <Route path="/ppay" element={<PlayerExpensePage />} />
             <Route path="/tpdu" element={<TournamentDashboardUp />} />
             <Route path="/tpdo" element={<TournamentDashboardOn />} />
-            <Route path="/tf" element={<TournamentFinished />} />
+            <Route path="/tfp" element={<FinishedTournamentPage />} />
 			<Route path="/todu" element={<OrganizerTournamentDashboardUp />} />
 			<Route path="/todo" element={<OrganizerTournamentDashboardOn/>} />
 		  </Routes>
