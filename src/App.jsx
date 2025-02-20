@@ -45,14 +45,32 @@ const App = () => {
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />
 						<Route path="/payment" element={<Payment />} />
-						<Route path="/chessgame" element={<ChessGame />} />
+						<Route
+							path="/chessgame"
+							element={
+								<ProtectedRoute
+									element={<ChessGame />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
 						<Route
 							path="/player-dashboard"
-							element={<PlayerDashboard />}
+							element={
+								<ProtectedRoute
+									element={<PlayerDashboard />}
+									roles={["PLAYER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/signup-organizer"
-							element={<SignupOrganizer />}
+							element={
+								<ProtectedRoute
+									element={<SignupOrganizer />}
+									roles={["ORGANIZER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/payment-success"
@@ -64,26 +82,67 @@ const App = () => {
 						/>
 						<Route
 							path="/tournament-registration/:id"
-							element={<TournamentRegistration />}
+							element={
+								<ProtectedRoute
+									element={<TournamentRegistration />}
+									roles={["PLAYER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/organizer-dashboard"
-							element={<Organizerdashboardnew />}
+							element={
+								<ProtectedRoute
+									element={<Organizerdashboardnew />}
+									roles={["ORGANIZER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/create-tournament"
-							element={<CreateTournament />}
+							element={
+								<ProtectedRoute
+									element={<CreateTournament />}
+									roles={["ORGANIZER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/update-tournament"
-							element={<UpdateTournament />}
+							element={
+								<ProtectedRoute
+									element={<UpdateTournament />}
+									roles={["ORGANIZER"]}
+								/>
+							}
 						/>
-						<Route path="/pp" element={<PlayerProfile />} />
+						<Route
+							path="/pp"
+							element={
+								<ProtectedRoute
+									element={<PlayerProfile />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
 						<Route
 							path="/opay"
-							element={<OrganizerPaymentPage />}
+							element={
+								<ProtectedRoute
+									element={<OrganizerPaymentPage />}
+									roles={["ORGANIZER"]}
+								/>
+							}
 						/>
-						<Route path="/ppay" element={<PlayerExpensePage />} />
+						<Route
+							path="/ppay"
+							element={
+								<ProtectedRoute
+									element={<PlayerExpensePage />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
 						<Route
 							path="/tpdu"
 							element={<TournamentDashboardUp />}
