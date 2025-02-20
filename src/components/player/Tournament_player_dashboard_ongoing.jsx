@@ -29,7 +29,7 @@ const TournamentDashboard = () => {
       title: "$300,000 PRIZE FUND",
     },
     {
-      img: "/news4.png",
+      img: "/news3.png",
       title: "Carlsen, Nepo, and more in Division 1",
     },
     {
@@ -39,7 +39,7 @@ const TournamentDashboard = () => {
     {
       img: "/news5.png",
       title: "World Chess Championship to be held in Dubai",
-    },
+    }
 
   ];
 
@@ -225,21 +225,21 @@ const TournamentDashboard = () => {
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
-                  transform: `translateX(-${currentIndex * 100}%)`,
-                  width: `${totalSlides * 100}%`,
+                  transform: `translateX(-${currentIndex * 20}%)`,
+                  width: `${totalSlides * 50}%`,
                 }}
               >
                 {mediaUpdates.map((update, index) => (
                   <div
                     key={index}
                     className="w-full flex-shrink-0 px-2"
-                    style={{ width: "100%" }}
+                    style={{ width: "20%" }}
                   >
-                    <div className="w-80 mx-auto rounded-lg shadow-md">
+                    <div className="w-100 h-100 mx-auto rounded-lg shadow-md">
                       <img
                         src={update.img}
                         alt={`Media Update ${index + 1}`}
-                        className="w-full h-40 object-cover rounded-t-lg"
+                        className="w-full h-60 object-cover rounded-t-lg"
                       />
                       <div className="p-4">
                         <h3 className="font-bold text-lg">{update.title}</h3>

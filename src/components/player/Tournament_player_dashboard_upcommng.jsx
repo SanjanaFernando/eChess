@@ -19,51 +19,51 @@ const TournamentPage = () => {
     console.log("Profile view clicked");
   };
   const [currentIndex, setCurrentIndex] = useState(0);
-  const mediaUpdates = [
-    {
-      img: "/news1.png",
-      title: "GM Alireza Firouzja wins Division I of Chess.com Classic 2024",
-    },
-    {
-      img: "/news2.png",
-      title: "$300,000 PRIZE FUND",
-    },
-    {
-      img: "/news4.png",
-      title: "Carlsen, Nepo, and more in Division 1",
-    },
-    {
-      img: "/news4.png",
-      title: "New Chess Rules for 2025 Announced",
-    },
-    {
-      img: "/news5.png",
-      title: "World Chess Championship to be held in Dubai",
-    },
-
-  ];
-
-  const totalSlides = mediaUpdates.length;
-
-  // Auto-slide every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [totalSlides]);
-
-  // Handle manual slide change
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
-    );
-  };
+   const mediaUpdates = [
+     {
+       img: "/news1.png",
+       title: "GM Alireza Firouzja wins Division I of Chess.com Classic 2024",
+     },
+     {
+       img: "/news2.png",
+       title: "$300,000 PRIZE FUND",
+     },
+     {
+       img: "/news3.png",
+       title: "Carlsen, Nepo, and more in Division 1",
+     },
+     {
+       img: "/news4.png",
+       title: "New Chess Rules for 2025 Announced",
+     },
+     {
+       img: "/news5.png",
+       title: "World Chess Championship to be held in Dubai",
+     }
+ 
+   ];
+ 
+   const totalSlides = mediaUpdates.length;
+ 
+   // Auto-slide every 3 seconds
+   useEffect(() => {
+     const interval = setInterval(() => {
+       setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+     }, 3000);
+ 
+     return () => clearInterval(interval);
+   }, [totalSlides]);
+ 
+   // Handle manual slide change
+   const nextSlide = () => {
+     setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+   };
+ 
+   const prevSlide = () => {
+     setCurrentIndex((prevIndex) =>
+       prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
+     );
+   };
 
 
   return (
@@ -226,32 +226,32 @@ const TournamentPage = () => {
         </div>
       </section>
 
-      {/* Media Updates Section */}
-      <section className="bg-gray-50 py-12">
+       {/* Media Updates Section */}
+       <section className="bg-gray-50 py-12 mt-8">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl font-extrabold text-gray-900 mb-8 text-center">
             Media Updates
           </h2>
           <div className="relative w-full max-w-5xl mx-auto">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden rounded-lg">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
-                  transform: `translateX(-${currentIndex * 100}%)`,
-                  width: `${totalSlides * 100}%`,
+                  transform: `translateX(-${currentIndex * 20}%)`,
+                  width: `${totalSlides * 50}%`,
                 }}
               >
                 {mediaUpdates.map((update, index) => (
                   <div
                     key={index}
                     className="w-full flex-shrink-0 px-2"
-                    style={{ width: "100%" }}
+                    style={{ width: "20%" }}
                   >
-                    <div className="w-80 mx-auto rounded-lg shadow-md">
+                    <div className="w-100 h-100 mx-auto rounded-lg shadow-md">
                       <img
                         src={update.img}
                         alt={`Media Update ${index + 1}`}
-                        className="w-full h-40 object-cover rounded-t-lg"
+                        className="w-full h-60 object-cover rounded-t-lg"
                       />
                       <div className="p-4">
                         <h3 className="font-bold text-lg">{update.title}</h3>

@@ -20,41 +20,51 @@ const FinishedTournamentPage = () => {
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const mediaUpdates = [
-    {
-      img: "/news1.png",
-      title: "GM Alireza Firouzja wins Division I of Chess.com Classic 2024",
-    },
-    {
-      img: "/news2.png",
-      title: "$300,000 PRIZE FUND",
-    },
-    {
-      img: "/news4.png",
-      title: "Carlsen, Nepo, and more in Division 1",
-    },
-  ];
-
-  const totalSlides = mediaUpdates.length;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [totalSlides]);
-
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
-    );
-  };
-
+   const mediaUpdates = [
+     {
+       img: "/news1.png",
+       title: "GM Alireza Firouzja wins Division I of Chess.com Classic 2024",
+     },
+     {
+       img: "/news2.png",
+       title: "$300,000 PRIZE FUND",
+     },
+     {
+       img: "/news3.png",
+       title: "Carlsen, Nepo, and more in Division 1",
+     },
+     {
+       img: "/news4.png",
+       title: "New Chess Rules for 2025 Announced",
+     },
+     {
+       img: "/news5.png",
+       title: "World Chess Championship to be held in Dubai",
+     }
+ 
+   ];
+ 
+   const totalSlides = mediaUpdates.length;
+ 
+   // Auto-slide every 3 seconds
+   useEffect(() => {
+     const interval = setInterval(() => {
+       setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+     }, 3000);
+ 
+     return () => clearInterval(interval);
+   }, [totalSlides]);
+ 
+   // Handle manual slide change
+   const nextSlide = () => {
+     setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+   };
+ 
+   const prevSlide = () => {
+     setCurrentIndex((prevIndex) =>
+       prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
+     );
+   };
   return (
     <div className="font-sans antialiased text-gray-900">
       {/* Navbar */}
@@ -174,16 +184,17 @@ const FinishedTournamentPage = () => {
             {/* Tournament Finished */}
             <div className="text-center">
               {/* Payment Icon */}
-              <div className="flex items-center justify-center h-16">
-                <img src="/score 1.png" alt="finished" className="h-10" />
-              </div>
-              <p className="font-bold">Tournament Finished</p>
+              <div className="flex flex-col items-center">
+          <img src="/trophy.png" alt="Tournament Finished Icon" className="h-32 mb-4 animate-bounce" />
+          <h1 className="text-4xl font-bold animate-pulse">🏆 Tournament Finished 🏆</h1>
+        </div>
               <p>View Results</p>
             </div>
           </div>
         </div>
       </section>
 
+      
       {/* Media Updates Section */}
       <section className="bg-gray-50 py-12 mt-8">
         <div className="container mx-auto px-4">
@@ -195,21 +206,21 @@ const FinishedTournamentPage = () => {
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
-                  transform: `translateX(-${currentIndex * 100}%)`,
-                  width: `${totalSlides * 100}%`,
+                  transform: `translateX(-${currentIndex * 20}%)`,
+                  width: `${totalSlides * 50}%`,
                 }}
               >
                 {mediaUpdates.map((update, index) => (
                   <div
                     key={index}
                     className="w-full flex-shrink-0 px-2"
-                    style={{ width: "100%" }}
+                    style={{ width: "20%" }}
                   >
-                    <div className="w-80 mx-auto rounded-lg shadow-md">
+                    <div className="w-100 h-100 mx-auto rounded-lg shadow-md">
                       <img
                         src={update.img}
                         alt={`Media Update ${index + 1}`}
-                        className="w-full h-40 object-cover rounded-t-lg"
+                        className="w-full h-60 object-cover rounded-t-lg"
                       />
                       <div className="p-4">
                         <h3 className="font-bold text-lg">{update.title}</h3>
