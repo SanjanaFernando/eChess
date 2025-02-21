@@ -26,6 +26,7 @@ import OrganizerTournamentDashboardUp from "./components/organizer/Tournament_or
 import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_player_dahboard_ongoing";
 import FinishedTournamentPage from "./components/player/Tournament_finished_player";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UpcomingTournamentOrganizerView from "./components/organizer/Tournament_organizer_dashboard_upcomming";
 
 const App = () => {
 	return (
@@ -150,6 +151,14 @@ const App = () => {
 						<Route
 							path="/tpdo"
 							element={<TournamentDashboardOn />}
+						/>
+						<Route
+							path="/tpf"
+							element={<FinishedTournamentPage />}
+						/>
+						<Route
+							path="/todu"
+							element={<UpcomingTournamentOrganizerView />}
 						/>
 						<Route path="/tf" element={<TournamentFinished />} />
 					</Routes>
