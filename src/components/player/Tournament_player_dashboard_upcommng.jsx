@@ -168,9 +168,10 @@ const TournamentPage = () => {
 
           {/* Image Placeholder */}
           <div className="bg-gray-200 rounded-lg h-64">
-          <img
-              src="/colombo.jpg" 
-              
+            <img
+              src="colombo.jpg"
+              alt="Tournament"
+              className="w-full h-full object-cover rounded-lg"
             />
           </div>
         </div>
