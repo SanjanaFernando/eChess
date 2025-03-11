@@ -106,7 +106,8 @@ const PlayerDashboard = () => {
 		if (!tournament.isPlayerRegistered) {
 			navigate(`/tournament-registration/${tournament._id}`);
 		} else {
-			navigate("#");
+			// console.log("Navigating to tournament dashboard");
+			navigate("/tpdu");
 		}
 	};
 
@@ -137,7 +138,10 @@ const PlayerDashboard = () => {
 					</div>
 				</h1>
 				<div className="flex space-x-8">
-					<a href="/chessgame" className="text-gray-800 font-medium">
+					<a
+						href="/chess-game-setup"
+						className="text-gray-800 font-medium"
+					>
 						Play
 					</a>
 					<a
