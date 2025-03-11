@@ -54,10 +54,17 @@ const TournamentPage = () => {
 		return () => clearInterval(interval);
 	}, [totalSlides]);
 
-	// Handle manual slide change
-	const nextSlide = () => {
-		setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-	};
+
+          {/* Image Placeholder */}
+          <div className="bg-gray-200 rounded-lg h-64">
+            <img
+              src="colombo.jpg"
+              alt="Tournament"
+              className="w-full h-full object-cover rounded-lg"
+            />
+          </div>
+        </div>
+      </section>
 
 	const prevSlide = () => {
 		setCurrentIndex((prevIndex) =>
