@@ -4,7 +4,7 @@ import Hero from "./components/Hero";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Payment from "./components/Payment";
-import ChessGame from "./components/ChessGame";
+import ChessGame from "./components/chess-game/ChessGame";
 import "./App.css";
 import SignupOrganizer from "./components/SignupOrganizer";
 import PlayerDashboard from "./components/Playerdashboard";
@@ -26,6 +26,7 @@ import OrganizerTournamentDashboardUp from "./components/organizer/Tournament_or
 import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_player_dahboard_ongoing";
 import FinishedTournamentPage from "./components/player/Tournament_finished_player";
 import ProtectedRoute from "./components/ProtectedRoute";
+import GameSetup from "./components/chess-game/GameSetup";
 import UpcomingTournamentOrganizerView from "./components/organizer/Tournament_organizer_dashboard_upcomming";
 
 const App = () => {
@@ -46,15 +47,6 @@ const App = () => {
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />
 						<Route path="/payment" element={<Payment />} />
-						<Route
-							path="/chessgame"
-							element={
-								<ProtectedRoute
-									element={<ChessGame />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
 						<Route
 							path="/player-dashboard"
 							element={
@@ -127,7 +119,7 @@ const App = () => {
 							}
 						/>
 						<Route
-							path="/opay"
+							path="/organizer-payments/:id"
 							element={
 								<ProtectedRoute
 									element={<OrganizerPaymentPage />}
@@ -146,11 +138,21 @@ const App = () => {
 						/>
 						<Route
 							path="/tpdu"
-							element={<TournamentDashboardUp />}
+							element={
+								<ProtectedRoute
+									element={<TournamentDashboardUp />}
+									roles={["PLAYER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/tpdo"
-							element={<TournamentDashboardOn />}
+							element={
+								<ProtectedRoute
+									element={<TournamentDashboardOn />}
+									roles={["PLAYER"]}
+								/>
+							}
 						/>
 						<Route
 							path="/tpf"
@@ -161,6 +163,19 @@ const App = () => {
 							element={<UpcomingTournamentOrganizerView />}
 						/>
 						<Route path="/tf" element={<TournamentFinished />} />
+						<Route
+							path="/chess-game-setup"
+							element={<GameSetup />}
+						/>
+						<Route
+							path="/chess-game"
+							element={
+								<ProtectedRoute
+									element={<ChessGame />}
+									roles={["PLAYER"]}
+								/>
+							}
+						/>
 					</Routes>
 				</main>
 			</div>
