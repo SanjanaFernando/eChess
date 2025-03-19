@@ -63,8 +63,7 @@ const TournamentPage = () => {
               className="w-full h-full object-cover rounded-lg"
             />
           </div>
-        </div>
-      </section>
+       
 
 	const prevSlide = () => {
 		setCurrentIndex((prevIndex) =>
