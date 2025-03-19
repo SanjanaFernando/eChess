@@ -18,52 +18,50 @@ const UpcomingTournamentOrganizerView = () => {
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);
-    const mediaUpdates = [
-      {
-        img: "/news1.png",
-        title: "GM Alireza Firouzja wins Division I of Chess.com Classic 2024",
-      },
-      {
-        img: "/news2.png",
-        title: "$300,000 PRIZE FUND",
-      },
-      {
-        img: "/news3.png",
-        title: "Carlsen, Nepo, and more in Division 1",
-      },
-      {
-        img: "/news4.png",
-        title: "New Chess Rules for 2025 Announced",
-      },
-      {
-        img: "/news5.png",
-        title: "World Chess Championship to be held in Dubai",
-      }
-  
-    ];
-  
-    const totalSlides = mediaUpdates.length;
-  
-    // Auto-slide every 3 seconds
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-      }, 3000);
-  
-      return () => clearInterval(interval);
-    }, [totalSlides]);
-  
-    // Handle manual slide change
-    const nextSlide = () => {
+  const mediaUpdates = [
+    {
+      img: "/news1.png",
+      title: "GM Alireza Firouzja wins Division I of Chess.com Classic 2024",
+    },
+    {
+      img: "/news2.png",
+      title: "$300,000 PRIZE FUND",
+    },
+    {
+      img: "/news3.png",
+      title: "Carlsen, Nepo, and more in Division 1",
+    },
+    {
+      img: "/news4.png",
+      title: "New Chess Rules for 2025 Announced",
+    },
+    {
+      img: "/news5.png",
+      title: "World Chess Championship to be held in Dubai",
+    },
+  ];
+
+  const totalSlides = mediaUpdates.length;
+
+  // Auto-slide every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-    };
-  
-    const prevSlide = () => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
-      );
-    };
-  
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [totalSlides]);
+
+  // Handle manual slide change
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
+    );
+  };
 
   const [sections, setSections] = useState([
     { ageGroup: "", yearRange: "", fee: "" },
@@ -223,12 +221,7 @@ const UpcomingTournamentOrganizerView = () => {
           </div>
         </div>
       </section>
-      {/* Edit Tournament Details Button */}
-      <div className="text-center mt-8">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Edit Tournament Details
-        </button>
-      </div>
+     
 
       {/* Edit Tournament Details Section */}
       <section className="py-16 mt-8 bg-gray-100">
@@ -442,6 +435,29 @@ const UpcomingTournamentOrganizerView = () => {
                 required
               />
             </div>
+            {/* Add Image */}
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Add Image
+              </label>
+              <div className="border-2 border-dashed border-gray-300 bg-gray-100 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400">
+                <img
+                  src="/upload 1.png"
+                  alt="Upload Icon"
+                  className="h-12 mb-2"
+                />
+                <p className="text-gray-600">Drag and Drop here</p>
+                <p className="text-blue-500 cursor-pointer">
+                  or <span className="underline">Browse</span>
+                </p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleImageUpload(e)}
+                />
+              </div>
+            </div>
 
             <p className="text-sm text-gray-500 mt-4">
               By submitting this form, you confirm that the tournament details
@@ -546,8 +562,9 @@ const UpcomingTournamentOrganizerView = () => {
                   <button
                     key={index}
                     onClick={() => setCurrentIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-all ${currentIndex === index ? "bg-gray-900" : "bg-gray-400"
-                      }`}
+                    className={`w-3 h-3 rounded-full transition-all ${
+                      currentIndex === index ? "bg-gray-900" : "bg-gray-400"
+                    }`}
                   ></button>
                 ))}
               </div>
@@ -555,7 +572,6 @@ const UpcomingTournamentOrganizerView = () => {
           </div>
         </div>
       </section>
-
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-4 mt-8">
