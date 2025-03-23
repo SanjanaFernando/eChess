@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { tokenDecode } from "../utils/token";
 
 export default function Header() {
+
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [user, setUser] = useState(null);
 	const navigate = useNavigate();
@@ -22,30 +23,31 @@ export default function Header() {
 		navigate("/login");
 	};
 
-	return (
-		<header className="top-0 flex flex-col md:flex-row justify-between items-center p-2 px-5 md:px-10 bg-transparent text-white w-full">
-			{/* Logo and Navigation */}
-			<div className="flex w-full md:w-auto">
-				{/* Hamburger Menu for Mobile */}
-				<button
-					className="text-white md:hidden focus:outline-none"
-					onClick={() => setIsMenuOpen(!isMenuOpen)}
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						strokeWidth={2}
-						stroke="currentColor"
-						className="w-6 h-6"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M3 6h18M3 12h18M3 18h18"
-						/>
-					</svg>
-				</button>
+  return (
+    <header className="top-0 flex flex-col md:flex-row justify-between items-center p-2 px-5 md:px-10 bg-transparent text-white w-full">
+      {/* Logo and Navigation */}
+      <div className="flex w-full md:w-auto">
+        {/* Hamburger Menu for Mobile */}
+        <button
+          className="text-white md:hidden focus:outline-none"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 6h18M3 12h18M3 18h18"
+            />
+          </svg>
+        </button>
+
 
 				{/* Logo */}
 				<img
