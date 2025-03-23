@@ -30,6 +30,18 @@ export const login = async (data) => {
     }
 };
 
+export const updatePlayer = async (userId, playerData) => {
+    try {
+        const response = await axios.put(`${API_URL}/api/v1/players/${userId}`, playerData, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating player: ', error);
+        throw error;
+    }
+}
+
 export const getPlayerByUser = async (userId) => {
     try {
         const response = await axios.get(`${API_URL}/players/get-player-by-user/${userId}`, {
@@ -37,7 +49,7 @@ export const getPlayerByUser = async (userId) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error retrieving organizer data...', error);
+        console.error('Error retrieving player data...', error);
         throw error;
     }
 }

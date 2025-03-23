@@ -2,6 +2,12 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+
+const getAuthHeader = () => {
+    const token = localStorage.getItem("token");
+    return { Authorization: `Bearer ${token}` };
+}
+
 // Register API Call
 export const registerUser = async (userData) => {
     try {
@@ -39,9 +45,22 @@ export const getUser = async (userId) => {
         return response.data;
     } catch (err) {
         console.error("Error fetching user: ", err);
-        throw err.response ? err.response.data : error.message;
+        throw err.response ? err.response.data : err.message;
     }
 };
+
+export const updateUser = async (userId, userData) => {
+    try {
+        console.log(userData);
+        const response = await axios.put(`${API_URL}/api/v1/users/${userId}`, userData, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (err) {
+        console.error("Error updating user: ", err);
+        throw err;
+    }
+}
 
 export const sendPasswordResetEmail = async (email) => {
     try {
