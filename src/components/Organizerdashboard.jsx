@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getClassifiedTournaments } from "../state/tournament-api";
+import { tokenDecode } from "../utils/token";
 
 const TournamentsPage = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
+
 	const isTournamentsTab = location.pathname === "/organizer-dashboard";
+
+	const [userId, setUserId] = useState(null);
 	const [activeTab, setActiveTab] = useState("Upcoming");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedFilters, setSelectedFilters] = useState({
@@ -18,11 +23,20 @@ const TournamentsPage = () => {
 		Ongoing: [],
 		Completed: [],
 	});
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchTournaments = async () => {
 			try {
+				const token = localStorage.getItem("token");
+				const decodedToken = tokenDecode(token);
+				const userId = decodedToken.id;
+
+				if (!userId) {
+					throw new Error("User ID not found in token");
+				}
+
+				setUserId(userId);
+
 				const tournaments = await getClassifiedTournaments();
 
 				setTournamentData(tournaments);
@@ -255,7 +269,7 @@ const TournamentsPage = () => {
 							<ul className="py-1">
 								<li>
 									<a
-										href="/profile"
+										href={`/profile/${userId}`}
 										className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
 									>
 										Profile

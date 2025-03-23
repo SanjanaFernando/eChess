@@ -53,6 +53,7 @@ const TournamentPage = () => {
     return () => clearInterval(interval);
   }, [totalSlides]);
 
+
   // Handle manual slide change
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);

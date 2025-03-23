@@ -12,7 +12,6 @@ import TournamentRegistration from "./components/TournamentRegistration";
 import Organizerdashboardnew from "./components/Organizerdashboard";
 import CreateTournament from "./components/CreateTournament";
 import UpdateTournament from "./components/UpdateTournament";
-import PlayerProfile from "./components/PlayerProfile";
 import OrganizerPaymentPage from "./components/OrganizerPayment";
 import PlayerExpensePage from "./components/PlayerExpense";
 import PaymentSuccess from "./components/PaymentSuccess";
@@ -28,6 +27,8 @@ import FinishedTournamentPage from "./components/player/Tournament_finished_play
 import ProtectedRoute from "./components/ProtectedRoute";
 import GameSetup from "./components/chess-game/GameSetup";
 import UpcomingTournamentOrganizerView from "./components/organizer/Tournament_organizer_dashboard_upcomming";
+import UserProfile from "./components/UserProfile";
+import UpdateUserProfile from "./components/UpdateUserProfile";
 
 const App = () => {
 	return (
@@ -46,6 +47,12 @@ const App = () => {
 						/>
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />
+						<Route path="/profile/:id" element={<UserProfile />} />
+						<Route
+							path="/edit-profile/:id"
+							element={<UpdateUserProfile />}
+						/>
+
 						<Route path="/payment" element={<Payment />} />
 						<Route
 							path="/player-dashboard"
@@ -106,15 +113,6 @@ const App = () => {
 								<ProtectedRoute
 									element={<UpdateTournament />}
 									roles={["ORGANIZER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/pp"
-							element={
-								<ProtectedRoute
-									element={<PlayerProfile />}
-									roles={["PLAYER"]}
 								/>
 							}
 						/>
