@@ -81,13 +81,13 @@ const TournamentDashboard = () => {
         {/* Navigation Links */}
         <div className="flex space-x-8">
           <a
-            href="/chessgame"
+            href="/chess-game-setup"
             className="text-gray-800 font-medium hover:text-gray-600"
           >
             Play
           </a>
           <a
-            href="#"
+            href="/player-dashboard"
             className={`text-gray-800 font-medium hover:text-gray-600 ${isTournamentsTab ? "font-extrabold" : ""
               }`}
           >
