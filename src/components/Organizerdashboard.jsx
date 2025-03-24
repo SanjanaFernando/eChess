@@ -238,14 +238,7 @@ const TournamentsPage = () => {
 					>
 						Create
 					</a>
-					<a
-						href="#"
-						className={`text-gray-800 font-medium ${
-							isTournamentsTab ? "font-extrabold" : ""
-						}`}
-					>
-						Tournaments
-					</a>
+					
 					<a href="/opay" className="text-gray-800 font-medium">
 						Payments
 					</a>
@@ -294,30 +287,7 @@ const TournamentsPage = () => {
 					Search for Tournaments
 				</h2>
 				<div className="flex items-center space-x-4">
-					<select
-						onChange={(e) =>
-							handleFilterChange("district", e.target.value)
-						}
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
-					>
-						<option value="">District</option>
-						<option>North District</option>
-						<option>South District</option>
-						<option>East District</option>
-						<option>West District</option>
-					</select>
-
-					<select
-						onChange={(e) =>
-							handleFilterChange("club", e.target.value)
-						}
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
-					>
-						<option value="">Club</option>
-						<option>Chess Club A</option>
-						<option>Chess Club B</option>
-						<option>Chess Club C</option>
-					</select>
+					
 
 					<select
 						onChange={(e) =>
@@ -326,8 +296,8 @@ const TournamentsPage = () => {
 						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
 					>
 						<option value="">Entry Type</option>
-						<option>Free</option>
-						<option>Paid</option>
+						<option value="Free">Free</option>
+						<option value="Paid">Paid</option>
 					</select>
 
 					<div className="relative w-full max-w-md">
