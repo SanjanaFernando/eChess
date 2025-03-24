@@ -83,13 +83,13 @@ const UpcomingTournamentOrganizerView = () => {
         {/* Navigation Links */}
         <div className="flex space-x-8">
           <a
-            href="/chessgame"
+            href="/chess-game-setup"
             className="text-gray-800 font-medium hover:text-gray-600"
           >
             Play
           </a>
           <a
-            href="#"
+            href="/organizer-dashboard"
             className={`text-gray-800 font-medium hover:text-gray-600 ${
               isTournamentsTab ? "font-extrabold" : ""
             }`}
@@ -97,7 +97,7 @@ const UpcomingTournamentOrganizerView = () => {
             Tournaments
           </a>
           <a
-            href="/ppay"
+            href="#"
             className="text-gray-800 font-medium hover:text-gray-600"
           >
             Payments

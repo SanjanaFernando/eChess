@@ -13,6 +13,8 @@ const PlayerDashboard = () => {
 	const [loading, setLoading] = useState(true);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const navigate = useNavigate();
+	const [entryType, setEntryType] = useState("Entry Type");
+	const [searchQuery, setSearchQuery] = useState("");
 
 	// Toggle the dropdown menu
 	const toggleDropdown = () => {
@@ -124,6 +126,12 @@ const PlayerDashboard = () => {
 		navigate("/login");
 	};
 
+	const filteredTournaments = tournaments.filter((tournament) => {
+		const matchesEntryType = entryType === "Entry Type" || tournament.entryType === entryType;
+		const matchesSearchQuery = tournament.name.toLowerCase().includes(searchQuery.toLowerCase());
+		return matchesEntryType && matchesSearchQuery;
+	});
+
 	return (
 		<div className="bg-gray-100 min-h-screen p-6" onClick={closeDropdown}>
 			{/* Navbar */}
@@ -143,14 +151,6 @@ const PlayerDashboard = () => {
 						className="text-gray-800 font-medium"
 					>
 						Play
-					</a>
-					<a
-						href="#"
-						className={`text-gray-800 font-medium ${
-							isTournamentsTab ? "font-extrabold" : ""
-						}`}
-					>
-						Tournaments
 					</a>
 					<a href="/ppay" className="text-gray-800 font-medium">
 						Payments
@@ -201,20 +201,11 @@ const PlayerDashboard = () => {
 					Search for Tournaments
 				</h2>
 				<div className="flex items-center space-x-4">
-					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-						<option>District</option>
-						<option>North District</option>
-						<option>South District</option>
-						<option>East District</option>
-						<option>West District</option>
-					</select>
-					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-						<option>Club</option>
-						<option>Chess Club A</option>
-						<option>Chess Club B</option>
-						<option>Chess Club C</option>
-					</select>
-					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
+					<select
+						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
+						value={entryType}
+						onChange={(e) => setEntryType(e.target.value)}
+					>
 						<option>Entry Type</option>
 						<option>Free</option>
 						<option>Paid</option>
@@ -224,6 +215,8 @@ const PlayerDashboard = () => {
 							type="text"
 							placeholder="Search"
 							className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full"
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
 						/>
 						<button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
 							🔍
@@ -257,8 +250,8 @@ const PlayerDashboard = () => {
 					<p className="text-center text-gray-500">
 						Loading tournaments...
 					</p>
-				) : tournaments.length > 0 ? (
-					tournaments.map((tournament, index) => (
+				) : filteredTournaments.length > 0 ? (
+					filteredTournaments.map((tournament, index) => (
 						<div
 							key={index}
 							className="flex items-center justify-between bg-white p-4 rounded-md shadow-md border border-gray-200"
