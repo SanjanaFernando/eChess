@@ -16,7 +16,6 @@ const OrganizerPaymentPage = () => {
 	const [unpaidPlayers, setUnpaidPlayers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-
 	const [activeTab, setActiveTab] = useState("Paid");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filters, setFilters] = useState({
@@ -24,22 +23,17 @@ const OrganizerPaymentPage = () => {
 		club: "",
 		entry: "",
 	});
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [userId, setUserId] = useState(null);
 
 	useEffect(() => {
 		const fetchPlayers = async () => {
 			try {
-				console.log(tournamentId);
 				const res = await getPlayersByPaymentStatus(tournamentId);
 				setPaidPlayers(res.COMPLETED);
 				setUnpaidPlayers(res.PENDING);
-				console.log("Paid players: ", res.COMPLETED);
-				console.log("Unpaid players: ", res.PENDING);
 			} catch (err) {
 				setError("Error fetching players by payment status");
-				console.error(
-					"Error fetching players by payment status: ",
-					err
-				);
 			} finally {
 				setLoading(false);
 			}
@@ -92,8 +86,21 @@ const OrganizerPaymentPage = () => {
 		}
 	};
 
-	if (loading) return <div>Loading...</div>;
+	const toggleDropdown = () => {
+		setIsDropdownOpen(!isDropdownOpen);
+	};
 
+	const closeDropdown = () => {
+		setIsDropdownOpen(false);
+	};
+
+	const handleLogout = (e) => {
+		e.preventDefault();
+		localStorage.removeItem("token");
+		navigate("/login");
+	};
+
+	if (loading) return <div>Loading...</div>;
 	if (error) return <div>{error}</div>;
 
 	return (
@@ -130,7 +137,41 @@ const OrganizerPaymentPage = () => {
 					</a>
 				</div>
 				<div className="relative">
-					<img src="/User.png" alt="User Icon" className="h-10" />
+					<div
+						className="mt-4 sm:mt-0 flex items-center cursor-pointer"
+						onClick={(e) => {
+							e.stopPropagation();
+							toggleDropdown();
+						}}
+					>
+						<img
+							src="/User.png"
+							alt="User Icon"
+							className="h-10 mr-4"
+						/>
+					</div>
+					{isDropdownOpen && (
+						<div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+							<ul className="py-1">
+								<li>
+									<a
+										href={`/profile/${userId}`}
+										className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+									>
+										Profile
+									</a>
+								</li>
+								<li>
+									<button
+										onClick={handleLogout}
+										className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+									>
+										Logout
+									</button>
+								</li>
+							</ul>
+						</div>
+					)}
 				</div>
 			</nav>
 
@@ -139,47 +180,13 @@ const OrganizerPaymentPage = () => {
 				<h2 className="text-lg font-semibold text-gray-700 mb-4">
 					Search for Players
 				</h2>
-				<div className="flex items-center space-x-4 w">
-					<select
-						onChange={(e) =>
-							handleFilterChange("district", e.target.value)
-						}
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
-					>
-						<option value="">District</option>
-						<option>North District</option>
-						<option>South District</option>
-						<option>East District</option>
-						<option>West District</option>
-					</select>
-
-					<select
-						onChange={(e) =>
-							handleFilterChange("club", e.target.value)
-						}
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
-					>
-						<option value="">Club</option>
-						<option>Chess Club A</option>
-						<option>Chess Club B</option>
-						<option>Chess Club C</option>
-					</select>
-
-					<select
-						onChange={(e) =>
-							handleFilterChange("entry", e.target.value)
-						}
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
-					>
-						<option value="">Entry Type</option>
-						<option>Free</option>
-						<option>Paid</option>
-					</select>
+				<div className="flex items-center space-x-4">
+					
 
 					<div className="relative w-full max-w-md">
 						<input
 							type="text"
-							placeholder="Search"
+							placeholder="Search by Name or Fide ID"
 							value={searchTerm}
 							onChange={handleSearchChange}
 							className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full"
@@ -215,57 +222,62 @@ const OrganizerPaymentPage = () => {
 						No players available...
 					</div>
 				) : (
-					players.map((player, index) => (
-						<div
-							key={index}
-							className="bg-white p-4 rounded-md shadow flex justify-between items-center"
-						>
-							<div className="flex items-center">
-								<div className="bg-gray-200 rounded-full p-4">
-									<img
-										src="/User2.png"
-										alt="User Icon"
-										className="h-10 w-10 rounded-full"
-									/>
+					players
+						.filter(player => 
+							player.nameWithInitials.toLowerCase().includes(searchTerm.toLowerCase()) || 
+							player.fideId.toLowerCase().includes(searchTerm.toLowerCase())
+						)
+						.map((player, index) => (
+							<div
+								key={index}
+								className="bg-white p-4 rounded-md shadow flex justify-between items-center"
+							>
+								<div className="flex items-center">
+									<div className="bg-gray-200 rounded-full p-4">
+										<img
+											src="/User2.png"
+											alt="User Icon"
+											className="h-10 w-10 rounded-full"
+										/>
+									</div>
+									<div className="ml-4">
+										<p className="font-semibold text-gray-800">
+											{player.nameWithInitials}
+										</p>
+										<p className="text-gray-600">
+											FIDE ID: {player.fideId}
+										</p>
+										<p className="text-gray-600">
+											FIDE Rating: {player.fideRating}
+										</p>
+									</div>
 								</div>
-								<div className="ml-4">
-									<p className="font-semibold text-gray-800">
-										{player.nameWithInitials}
-									</p>
-									<p className="text-gray-600">
-										FIDE ID: {player.fideId}
-									</p>
-									<p className="text-gray-600">
-										FIDE Rating: {player.fideRating}
-									</p>
-								</div>
+								{activeTab === "Unpaid" ? (
+									<div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-center items-center">
+										<button
+											onClick={() =>
+												handleRevokeClick(player.playerId)
+											}
+											className="px-4 py-2 bg-red-500 text-white rounded-lg w-24"
+										>
+											Reject
+										</button>
+										<button
+											onClick={() =>
+												handleAcceptClick(player.playerId)
+											}
+											className="px-4 py-2 bg-green-500 text-white rounded-lg w-24"
+										>
+											Accept
+										</button>
+									</div>
+								) : (
+									<button className="text-green-500 font-medium">
+										Paid
+									</button>
+								)}
 							</div>
-							{activeTab === "Unpaid" ? (
-								<div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-center items-center">
-									<button
-										onClick={() =>
-											handleRevokeClick(player.playerId)
-										}
-										className="px-4 py-2 bg-red-500 text-white rounded-lg w-24"
-									>
-										Reject
-									</button>
-									<button
-										onClick={() =>
-											handleAcceptClick(player.playerId)
-										}
-										className="px-4 py-2 bg-green-500 text-white rounded-lg w-24"
-									>
-										Accept
-									</button>
-								</div>
-							) : (
-								<button className="text-green-500 font-medium">
-									Paid
-								</button>
-							)}
-						</div>
-					))
+						))
 				)}
 			</div>
 		</div>
