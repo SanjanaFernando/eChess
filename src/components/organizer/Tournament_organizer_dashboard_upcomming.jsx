@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLocation,useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { getPlayersByPaymentStatus } from "../../state/player-api"; // Ensure this import is correct
-
+import colomboImage from "../../assets/colombo.jpg";
+import { tokenDecode } from "../../utils/token";// Import tokenDecode for decoding the token
 const UpcomingTournamentOrganizerView = () => {
   const params = useParams();
   const tournamentId = params.id;
@@ -19,13 +20,17 @@ const UpcomingTournamentOrganizerView = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = (e) => {
+  const handleProfileView = (e) => {
+    const token = localStorage.getItem("token");
+    const decodedToken = tokenDecode(token);
     e.preventDefault();
-    console.log("Logout clicked");
+    navigate(`/profile/${decodedToken.id}`); // Navigate to the user's profile
   };
 
-  const handleProfileView = () => {
-    console.log("Profile view clicked");
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token"); // Remove the token from local storage
+    navigate("/login"); // Navigate to the login page
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -138,12 +143,7 @@ const UpcomingTournamentOrganizerView = () => {
           >
             Tournaments
           </a>
-          <a
-            href="#"
-            className="text-gray-800 font-medium hover:text-gray-600"
-          >
-            Payments
-          </a>
+          
         </div>
         {/* Dropdown */}
         <div className="relative">
@@ -206,65 +206,13 @@ const UpcomingTournamentOrganizerView = () => {
           {/* Image Placeholder */}
           <div className="bg-gray-200 rounded-lg h-64">
             <img
-              src="colombo.jpg"
+              src={colomboImage}
               alt="Tournament"
               className="w-full h-full object-cover rounded-lg"
             />
           </div>
         </div>
       </section>
-
-      {/* Tournament Details Section */}
-      <section className=" py-12 mt-8" style={{ backgroundColor: "#F2D7D9" }}>
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-extrabold text-gray-900 mb-8 text-center">
-            Tournament Details
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Payments */}
-            <div className="text-center">
-              <div className="flex items-center justify-center h-16">
-                <img
-                  src="/credit-card 1.png"
-                  alt="Payments Icon"
-                  className="h-10"
-                />
-              </div>
-              <p className="font-bold">Payments</p>
-              <p>Paid</p>
-            </div>
-
-            {/* Date */}
-            <div className="text-center">
-              <div className="flex items-center justify-center h-16">
-                <img src="/date.png" alt="Date Icon" className="h-10" />
-              </div>
-              <p className="font-bold">Date</p>
-              <p>July 15-20, 2025</p>
-            </div>
-
-            {/* Location */}
-            <div className="text-center">
-              <div className="flex items-center justify-center h-16">
-                <img src="/location.png" alt="Location Icon" className="h-10" />
-              </div>
-              <p className="font-bold">Location</p>
-              <p>Colombo</p>
-            </div>
-
-            {/* Format */}
-            <div className="text-center">
-              <div className="flex items-center justify-center h-16">
-                <img src="/format.png" alt="Format Icon" className="h-10" />
-              </div>
-              <p className="font-bold">Format</p>
-              <p>Blitz and Rapid</p>
-            </div>
-          </div>
-        </div>
-      </section>
-     
-
       {/* Search Bar Section */}
       <div className="bg-pink-100 p-4 rounded-md mt-4">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">
@@ -315,9 +263,12 @@ const UpcomingTournamentOrganizerView = () => {
           </div>
         ) : (
           players
-            .filter(player => 
-              player.nameWithInitials.toLowerCase().includes(searchTerm.toLowerCase()) || 
-              player.fideId.toLowerCase().includes(searchTerm.toLowerCase())
+            .filter(
+              (player) =>
+                player.nameWithInitials
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase()) ||
+                player.fideId.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((player, index) => (
               <div
@@ -336,9 +287,7 @@ const UpcomingTournamentOrganizerView = () => {
                     <p className="font-semibold text-gray-800">
                       {player.nameWithInitials}
                     </p>
-                    <p className="text-gray-600">
-                      FIDE ID: {player.fideId}
-                    </p>
+                    <p className="text-gray-600">FIDE ID: {player.fideId}</p>
                     <p className="text-gray-600">
                       FIDE Rating: {player.fideRating}
                     </p>
@@ -360,14 +309,62 @@ const UpcomingTournamentOrganizerView = () => {
                     </button>
                   </div>
                 ) : (
-                  <button className="text-green-500 font-medium">
-                    Paid
-                  </button>
+                  <button className="text-green-500 font-medium">Paid</button>
                 )}
               </div>
             ))
         )}
       </div>
+
+      {/* Tournament Details Section */}
+      <section className=" py-12 mt-8" style={{ backgroundColor: "#F2D7D9" }}>
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-extrabold text-gray-900 mb-8 text-center">
+            Tournament Details
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Payments */}
+            <div className="text-center">
+              <div className="flex items-center justify-center h-16">
+                <img
+                  src="/credit-card 1.png"
+                  alt="Payments Icon"
+                  className="h-10"
+                />
+              </div>
+              <p className="font-bold">Payments</p>
+              <p>Paid</p>
+            </div>
+
+            {/* Date */}
+            <div className="text-center">
+              <div className="flex items-center justify-center h-16">
+                <img src="/date.png" alt="Date Icon" className="h-10" />
+              </div>
+              <p className="font-bold">Date</p>
+              <p>July 15-20, 2025</p>
+            </div>
+
+            {/* Location */}
+            <div className="text-center">
+              <div className="flex items-center justify-center h-16">
+                <img src="/location.png" alt="Location Icon" className="h-10" />
+              </div>
+              <p className="font-bold">Location</p>
+              <p>Colombo</p>
+            </div>
+
+            {/* Format */}
+            <div className="text-center">
+              <div className="flex items-center justify-center h-16">
+                <img src="/format.png" alt="Format Icon" className="h-10" />
+              </div>
+              <p className="font-bold">Format</p>
+              <p>Blitz and Rapid</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Edit Tournament Details Section */}
       <section className="py-16 mt-8 bg-gray-100">
