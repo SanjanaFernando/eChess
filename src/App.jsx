@@ -142,7 +142,7 @@ const App = () => {
 									roles={["PLAYER"]}
 								/>
 							}
-						/>
+						/>						
 						<Route
 							path="/tpdo"
 							element={
