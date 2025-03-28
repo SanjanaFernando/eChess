@@ -70,12 +70,26 @@ const PlayerDashboard = () => {
 
 			const finishedTournaments = [
 				{
-					name: "2023 Winter Chess Championship",
+					name: "2025 Winter Chess Championship",
 					club: "California Chess Club",
 					entryType: "Free",
 					img: "/trophy.png",
 				},
+				{
+					name: "2025 Summer Chess Championship",
+					club: "Sample Chess Club 2",
+					entryType: "Paid",
+					img: "/trophy.png",
+				},
+				{
+					name: "2025 Winter Chess Championship",
+					club: "Sample Chess Club 1",
+					entryType: "Free",
+					img: "/trophy.png",
+				},
 			];
+
+			
 
 			// Combine data for all tabs
 			const data = {
