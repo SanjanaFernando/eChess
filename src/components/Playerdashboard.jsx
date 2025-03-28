@@ -7,12 +7,12 @@ import { tokenDecode } from "../utils/token";
 const PlayerDashboard = () => {
 	const location = useLocation();
 	const isTournamentsTab = location.pathname === "/player-dashboard";
+	const navigate = useNavigate();
 
 	const [activeTab, setActiveTab] = useState("Upcoming");
 	const [tournaments, setTournaments] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const navigate = useNavigate();
 	const [entryType, setEntryType] = useState("Entry Type");
 	const [searchQuery, setSearchQuery] = useState("");
 
@@ -108,9 +108,16 @@ const PlayerDashboard = () => {
 		if (!tournament.isPlayerRegistered) {
 			navigate(`/tournament-registration/${tournament._id}`);
 		} else {
-			// console.log("Navigating to tournament dashboard");
 			navigate("/tpdu");
 		}
+	};
+
+	const handleViewOngoing = () => {
+		navigate("/tpdo");
+	};
+
+	const handleViewFinished = () => {
+		navigate("/tpf");
 	};
 
 	const handleProfileView = (e) => {
@@ -280,22 +287,61 @@ const PlayerDashboard = () => {
 									</span>
 								</div>
 							</div>
-							<button
-								onClick={() =>
-									handleTournamentButtonClick(tournament)
-								}
-								className={`${
-									tournament.isPlayerRegistered
-										? "bg-green-500 px-7"
-										: "bg-blue"
-								} text-white px-4 py-2 rounded-md font-semibold`}
-							>
-								{activeTab === "Upcoming"
-									? tournament.isPlayerRegistered
-										? "View"
-										: "Register"
-									: "View"}
-							</button>
+							<div className="flex space-x-2">
+								{activeTab === "Upcoming" && (
+									<>
+										{tournament.isPlayerRegistered ? (
+											<button
+												onClick={() => navigate("/tpdu")}
+												className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+											>
+												View
+											</button>
+										) : (
+											<>
+												<button
+													onClick={() => navigate("/tpdu")}
+													className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+												>
+													View
+												</button>
+												<button
+													onClick={() =>
+														handleTournamentButtonClick(tournament)
+													}
+													className="bg-blue text-white px-4 py-2 rounded-md font-semibold"
+												>
+													Register
+												</button>
+											</>
+										)}
+									</>
+								)}
+								{activeTab === "Ongoing" && (
+									<button
+										onClick={handleViewOngoing}
+										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+									>
+										View
+									</button>
+								)}
+								{activeTab === "Finished" && (
+									<button
+										onClick={handleViewFinished}
+										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+									>
+										View
+									</button>
+								)}
+								{activeTab === "Registered" && (
+									<button
+										onClick={() => navigate("/tpdu")}
+										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+									>
+										View
+									</button>
+								)}
+							</div>
 						</div>
 					))
 				) : (

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { tokenDecode } from "../../utils/token";// Import tokenDecode for decoding the token
+
 
 const TournamentPage = () => {
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const [isRegistered, setIsRegistered] = useState(false); // New state for registration status
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTournamentsTab, setIsTournamentsTab] = useState(true); // Assuming this is the default active tab
 
@@ -8,16 +13,19 @@ const TournamentPage = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = (e) => {
+  const handleProfileView = (e) => {
+    const token = localStorage.getItem("token");
+    const decodedToken = tokenDecode(token);
     e.preventDefault();
-    // Implement your logout logic here, e.g., clearing localStorage and redirecting
-    console.log("Logout clicked");
+    navigate(`/profile/${decodedToken.id}`); // Navigate to the user's profile
   };
 
-  const handleProfileView = () => {
-    // Implement navigation to the profile view
-    console.log("Profile view clicked");
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token"); // Remove the token from local storage
+    navigate("/login"); // Navigate to the login page
   };
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const mediaUpdates = [
     {
@@ -52,7 +60,6 @@ const TournamentPage = () => {
 
     return () => clearInterval(interval);
   }, [totalSlides]);
-
 
   // Handle manual slide change
   const nextSlide = () => {
@@ -123,7 +130,6 @@ const TournamentPage = () => {
                   <a
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={handleProfileView}
-                    href="/profile" // Replace with your actual profile link
                   >
                     Profile
                   </a>
@@ -155,15 +161,17 @@ const TournamentPage = () => {
               tournament that brings together chess enthusiasts from across Sri
               Lanka. This open event welcomes players of all skill levels, from
               seasoned grandmasters to enthusiastic beginners. With rapid time
-              controls, the action is non- stop, offering exciting games and a
+              controls, the action is non-stop, offering exciting games and a
               chance to test your quick-thinking strategies. Compete for prize
               money, rating points, and the coveted title of Colombo Rapid Chess
               Open Champion! Join us for a day of thrilling chess in the heart
               of Colombo.
             </p>
-            <button className="bg-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Register
-            </button>
+            {isRegistered && ( // Conditionally render the button
+              <button className="bg-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Register
+              </button>
+            )}
           </div>
 
           {/* Image Placeholder */}
