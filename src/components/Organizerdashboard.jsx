@@ -105,7 +105,11 @@ const TournamentsPage = () => {
 	};
 
 	const handleViewButtonClick = (tournamentId) => {
-		navigate(`/organizer-payments/${tournamentId}`);
+		if (activeTab === "Completed") {
+			navigate("/tpf");
+		} else {
+			navigate(`/todu/${tournamentId}`);
+		}
 	};
 
 	const TournamentTable = ({ tournaments }) => (

@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useLocation,useParams, useNavigate } from "react-router-dom";
+import { getPlayersByPaymentStatus } from "../../state/player-api"; // Ensure this import is correct
 
 const UpcomingTournamentOrganizerView = () => {
+  const params = useParams();
+  const tournamentId = params.id;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTournamentsTab, setIsTournamentsTab] = useState(true);
+  const [paidPlayers, setPaidPlayers] = useState([]);
+  const [unpaidPlayers, setUnpaidPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("Paid");
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -69,6 +80,37 @@ const UpcomingTournamentOrganizerView = () => {
 
   const addSection = () => {
     setSections([...sections, { ageGroup: "", yearRange: "", fee: "" }]);
+  };
+
+  // Fetch players by payment status based on tournament ID
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const res = await getPlayersByPaymentStatus(tournamentId);
+        setPaidPlayers(res.COMPLETED);
+        setUnpaidPlayers(res.PENDING);
+      } catch (err) {
+        setError("Error fetching players by payment status");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlayers();
+  }, [tournamentId]);
+
+  const players = activeTab === "Paid" ? paidPlayers : unpaidPlayers;
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleViewButtonClick = (tournamentId) => {
+    navigate(`/todu/${tournamentId}`); // This should match the defined route
   };
 
   return (
@@ -222,6 +264,110 @@ const UpcomingTournamentOrganizerView = () => {
         </div>
       </section>
      
+
+      {/* Search Bar Section */}
+      <div className="bg-pink-100 p-4 rounded-md mt-4">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">
+          Search for Players
+        </h2>
+        <div className="flex items-center space-x-4">
+          <div className="relative w-full max-w-md">
+            <input
+              type="text"
+              placeholder="Search by Name or Fide ID"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full"
+            />
+            <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+              🔍
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Navigation Bar */}
+      <div className="bg-gray-200 p-4 flex justify-center space-x-8">
+        {["Paid", "Unpaid"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => handleTabClick(tab)}
+            className={`text-gray-700 font-medium pb-2 ${
+              activeTab === tab
+                ? "border-b-2 border-gray-700 text-gray-900"
+                : "text-gray-500"
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Player Cards */}
+      <div className="space-y-4 mt-6">
+        {loading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : players.length === 0 ? (
+          <div className="text-center text-gray-500 py-4">
+            No players available...
+          </div>
+        ) : (
+          players
+            .filter(player => 
+              player.nameWithInitials.toLowerCase().includes(searchTerm.toLowerCase()) || 
+              player.fideId.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((player, index) => (
+              <div
+                key={index}
+                className="bg-white p-4 rounded-md shadow flex justify-between items-center"
+              >
+                <div className="flex items-center">
+                  <div className="bg-gray-200 rounded-full p-4">
+                    <img
+                      src="/User2.png"
+                      alt="User Icon"
+                      className="h-10 w-10 rounded-full"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <p className="font-semibold text-gray-800">
+                      {player.nameWithInitials}
+                    </p>
+                    <p className="text-gray-600">
+                      FIDE ID: {player.fideId}
+                    </p>
+                    <p className="text-gray-600">
+                      FIDE Rating: {player.fideRating}
+                    </p>
+                  </div>
+                </div>
+                {activeTab === "Unpaid" ? (
+                  <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 justify-center items-center">
+                    <button
+                      onClick={() => handleRevokeClick(player.playerId)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg w-24"
+                    >
+                      Reject
+                    </button>
+                    <button
+                      onClick={() => handleAcceptClick(player.playerId)}
+                      className="px-4 py-2 bg-green-500 text-white rounded-lg w-24"
+                    >
+                      Accept
+                    </button>
+                  </div>
+                ) : (
+                  <button className="text-green-500 font-medium">
+                    Paid
+                  </button>
+                )}
+              </div>
+            ))
+        )}
+      </div>
 
       {/* Edit Tournament Details Section */}
       <section className="py-16 mt-8 bg-gray-100">
