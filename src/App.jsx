@@ -125,6 +125,15 @@ const App = () => {
 								/>
 							}
 						/>
+						{/* <Route
+							path="/opay"
+							element={
+								<ProtectedRoute
+									element={<OrganizerPaymentPage />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+						/> */}
 						<Route
 							path="/ppay"
 							element={
