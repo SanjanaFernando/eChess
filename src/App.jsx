@@ -151,7 +151,7 @@ const App = () => {
 									roles={["PLAYER"]}
 								/>
 							}
-						/>
+						/>						
 						<Route
 							path="/tpdo"
 							element={
@@ -166,7 +166,7 @@ const App = () => {
 							element={<FinishedTournamentPage />}
 						/>
 						<Route
-							path="/todu"
+							path="/todu/:id"
 							element={<UpcomingTournamentOrganizerView />}
 						/>
 						<Route path="/tf" element={<TournamentFinished />} />

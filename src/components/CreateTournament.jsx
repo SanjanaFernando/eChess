@@ -60,12 +60,14 @@ const CreateTournament = () => {
 		try {
 			const token = localStorage.getItem("token");
 			const decodedToken = tokenDecode(token);
-			console.log(decodedToken.id);
+
+			// console.log(decodedToken.id);
 			const userId = decodedToken.id;
 			const organizer = await getOrganizerByUser(userId);
-			console.log("Organizer: ", organizer);
+			// console.log("Organizer: ", organizer);
 			const organizerId = organizer._id;
-			console.log("OrganizerId: ", organizerId);
+			// console.log("OrganizerId: ", organizerId);
+
 
 			const ageDetails = sections
 				.filter(
@@ -96,6 +98,21 @@ const CreateTournament = () => {
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	// Function to navigate to the profile page
+	const handleProfilePress = () => {
+		const token = localStorage.getItem("token");
+		const decodedToken = tokenDecode(token);
+		const userId = decodedToken.id;
+		navigate(`/profile/${userId}`);
+	};
+
+	// Function to handle logout
+	const handleLogout = (e) => {
+		e.preventDefault();
+		localStorage.removeItem("token");
+		navigate("/login");
 	};
 
 	return (
@@ -148,18 +165,16 @@ const CreateTournament = () => {
 						<div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
 							<ul className="py-1">
 								<li>
-									<a
-										href="/profile"
+									<button
+										onClick={handleProfilePress}
 										className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
 									>
 										Profile
-									</a>
+									</button>
 								</li>
 								<li>
 									<button
-										onClick={() =>
-											console.log("Logout clicked")
-										}
+										onClick={handleLogout}
 										className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
 									>
 										Logout
@@ -244,16 +259,6 @@ const CreateTournament = () => {
 									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue"
 									required
 								/>
-								{/* <input
-									type="text"
-									id="startDate"
-									placeholder="DD/ MM / YY"
-									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-									required
-									onChange={(event) => {
-										setStartDate(event.target.value);
-									}}
-								/> */}
 							</div>
 							<div>
 								<label
@@ -279,16 +284,6 @@ const CreateTournament = () => {
 									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue"
 									required
 								/>
-								{/* <input
-									type="text"
-									id="endDate"
-									placeholder="DD/ MM / YY"
-									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-									required
-									onChange={(event) => {
-										setEndDate(event.target.value);
-									}}
-								/> */}
 							</div>
 						</div>
 
@@ -391,7 +386,6 @@ const CreateTournament = () => {
 									id="gameType"
 									className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
 									onChange={(event) => {
-										console.log(event.target.value);
 										setGameType(event.target.value);
 									}}
 								>

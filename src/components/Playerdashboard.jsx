@@ -7,12 +7,14 @@ import { tokenDecode } from "../utils/token";
 const PlayerDashboard = () => {
 	const location = useLocation();
 	const isTournamentsTab = location.pathname === "/player-dashboard";
+	const navigate = useNavigate();
 
 	const [activeTab, setActiveTab] = useState("Upcoming");
 	const [tournaments, setTournaments] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const navigate = useNavigate();
+	const [entryType, setEntryType] = useState("Entry Type");
+	const [searchQuery, setSearchQuery] = useState("");
 
 	// Toggle the dropdown menu
 	const toggleDropdown = () => {
@@ -68,12 +70,26 @@ const PlayerDashboard = () => {
 
 			const finishedTournaments = [
 				{
-					name: "2023 Winter Chess Championship",
+					name: "2025 Winter Chess Championship",
 					club: "California Chess Club",
 					entryType: "Free",
 					img: "/trophy.png",
 				},
+				{
+					name: "2025 Summer Chess Championship",
+					club: "Sample Chess Club 2",
+					entryType: "Paid",
+					img: "/trophy.png",
+				},
+				{
+					name: "2025 Winter Chess Championship",
+					club: "Sample Chess Club 1",
+					entryType: "Free",
+					img: "/trophy.png",
+				},
 			];
+
+			
 
 			// Combine data for all tabs
 			const data = {
@@ -106,9 +122,16 @@ const PlayerDashboard = () => {
 		if (!tournament.isPlayerRegistered) {
 			navigate(`/tournament-registration/${tournament._id}`);
 		} else {
-			// console.log("Navigating to tournament dashboard");
 			navigate("/tpdu");
 		}
+	};
+
+	const handleViewOngoing = () => {
+		navigate("/tpdo");
+	};
+
+	const handleViewFinished = () => {
+		navigate("/tpf");
 	};
 
 	const handleProfileView = (e) => {
@@ -123,6 +146,12 @@ const PlayerDashboard = () => {
 		localStorage.removeItem("token");
 		navigate("/login");
 	};
+
+	const filteredTournaments = tournaments.filter((tournament) => {
+		const matchesEntryType = entryType === "Entry Type" || tournament.entryType === entryType;
+		const matchesSearchQuery = tournament.name.toLowerCase().includes(searchQuery.toLowerCase());
+		return matchesEntryType && matchesSearchQuery;
+	});
 
 	return (
 		<div className="bg-gray-100 min-h-screen p-6" onClick={closeDropdown}>
@@ -143,14 +172,6 @@ const PlayerDashboard = () => {
 						className="text-gray-800 font-medium"
 					>
 						Play
-					</a>
-					<a
-						href="#"
-						className={`text-gray-800 font-medium ${
-							isTournamentsTab ? "font-extrabold" : ""
-						}`}
-					>
-						Tournaments
 					</a>
 					<a href="/ppay" className="text-gray-800 font-medium">
 						Payments
@@ -201,20 +222,11 @@ const PlayerDashboard = () => {
 					Search for Tournaments
 				</h2>
 				<div className="flex items-center space-x-4">
-					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-						<option>District</option>
-						<option>North District</option>
-						<option>South District</option>
-						<option>East District</option>
-						<option>West District</option>
-					</select>
-					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
-						<option>Club</option>
-						<option>Chess Club A</option>
-						<option>Chess Club B</option>
-						<option>Chess Club C</option>
-					</select>
-					<select className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48">
+					<select
+						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
+						value={entryType}
+						onChange={(e) => setEntryType(e.target.value)}
+					>
 						<option>Entry Type</option>
 						<option>Free</option>
 						<option>Paid</option>
@@ -224,6 +236,8 @@ const PlayerDashboard = () => {
 							type="text"
 							placeholder="Search"
 							className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full"
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
 						/>
 						<button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
 							🔍
@@ -257,8 +271,8 @@ const PlayerDashboard = () => {
 					<p className="text-center text-gray-500">
 						Loading tournaments...
 					</p>
-				) : tournaments.length > 0 ? (
-					tournaments.map((tournament, index) => (
+				) : filteredTournaments.length > 0 ? (
+					filteredTournaments.map((tournament, index) => (
 						<div
 							key={index}
 							className="flex items-center justify-between bg-white p-4 rounded-md shadow-md border border-gray-200"
@@ -287,22 +301,61 @@ const PlayerDashboard = () => {
 									</span>
 								</div>
 							</div>
-							<button
-								onClick={() =>
-									handleTournamentButtonClick(tournament)
-								}
-								className={`${
-									tournament.isPlayerRegistered
-										? "bg-green-500 px-7"
-										: "bg-blue"
-								} text-white px-4 py-2 rounded-md font-semibold`}
-							>
-								{activeTab === "Upcoming"
-									? tournament.isPlayerRegistered
-										? "View"
-										: "Register"
-									: "View"}
-							</button>
+							<div className="flex space-x-2">
+								{activeTab === "Upcoming" && (
+									<>
+										{tournament.isPlayerRegistered ? (
+											<button
+												onClick={() => navigate("/tpdu")}
+												className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+											>
+												View
+											</button>
+										) : (
+											<>
+												<button
+													onClick={() => navigate("/tpdu")}
+													className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+												>
+													View
+												</button>
+												<button
+													onClick={() =>
+														handleTournamentButtonClick(tournament)
+													}
+													className="bg-blue text-white px-4 py-2 rounded-md font-semibold"
+												>
+													Register
+												</button>
+											</>
+										)}
+									</>
+								)}
+								{activeTab === "Ongoing" && (
+									<button
+										onClick={handleViewOngoing}
+										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+									>
+										View
+									</button>
+								)}
+								{activeTab === "Finished" && (
+									<button
+										onClick={handleViewFinished}
+										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+									>
+										View
+									</button>
+								)}
+								{activeTab === "Registered" && (
+									<button
+										onClick={() => navigate("/tpdu")}
+										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
+									>
+										View
+									</button>
+								)}
+							</div>
 						</div>
 					))
 				) : (

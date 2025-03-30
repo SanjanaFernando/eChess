@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { tokenDecode } from "../../utils/token";// Import tokenDecode for decoding the token
 
 const TournamentDashboard = () => {
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTournamentsTab, setIsTournamentsTab] = useState(true); // Assuming this is the default active tab
 
@@ -8,15 +11,17 @@ const TournamentDashboard = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = (e) => {
+  const handleProfileView = (e) => {
+    const token = localStorage.getItem("token");
+    const decodedToken = tokenDecode(token);
     e.preventDefault();
-    // Implement your logout logic here, e.g., clearing localStorage and redirecting
-    console.log("Logout clicked");
+    navigate(`/profile/${decodedToken.id}`); // Navigate to the user's profile
   };
 
-  const handleProfileView = () => {
-    // Implement navigation to the profile view
-    console.log("Profile view clicked");
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token"); // Remove the token from local storage
+    navigate("/login"); // Navigate to the login page
   };
   const [currentIndex, setCurrentIndex] = useState(0);
   const mediaUpdates = [
@@ -81,13 +86,13 @@ const TournamentDashboard = () => {
         {/* Navigation Links */}
         <div className="flex space-x-8">
           <a
-            href="/chessgame"
+            href="/chess-game-setup"
             className="text-gray-800 font-medium hover:text-gray-600"
           >
             Play
           </a>
           <a
-            href="#"
+            href="/player-dashboard"
             className={`text-gray-800 font-medium hover:text-gray-600 ${isTournamentsTab ? "font-extrabold" : ""
               }`}
           >
@@ -122,7 +127,6 @@ const TournamentDashboard = () => {
                   <a
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={handleProfileView}
-                    href="/profile" // Replace with your actual profile link
                   >
                     Profile
                   </a>
