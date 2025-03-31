@@ -118,6 +118,13 @@ const UpcomingTournamentOrganizerView = () => {
     navigate(`/todu/${tournamentId}`); // This should match the defined route
   };
 
+  const handleDeleteTournament = () => {
+    if (window.confirm("Are you sure you want to delete this tournament?")) {
+        // Add your delete logic here, e.g., API call to delete the tournament
+        console.log("Tournament deleted"); // Placeholder for actual delete logic
+    }
+  };
+
   return (
     <div className="font-sans antialiased text-gray-900">
       {/* Navbar */}
@@ -615,6 +622,14 @@ const UpcomingTournamentOrganizerView = () => {
               className="w-full bg-blue text-white p-4 rounded-md hover:bg-blue focus:outline-none focus:ring focus:ring-blue"
             >
               Update Tournament
+            </button>
+            {/* Delete Tournament Button */}
+            <button
+              type="button"
+              onClick={handleDeleteTournament}
+              className="w-full bg-red-500 text-white p-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300 mt-4"
+            >
+              Delete Tournament
             </button>
           </form>
         </div>
