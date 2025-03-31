@@ -22,7 +22,7 @@ import TournamentDashboardOn from "./components/player/Tournament_player_dashboa
 import TournamentDashboardUp from "./components/player/Tournament_player_dashboard_upcommng";
 import TournamentFinished from "./components/TournamentFinish";
 import OrganizerTournamentDashboardUp from "./components/organizer/Tournament_organizer_dashboard_upcomming";
-import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_player_dahboard_ongoing";
+import OrganizerTournamentDashboardOn from "./components/organizer/Tournament_organizer_dahboard_ongoing";
 import FinishedTournamentPage from "./components/player/Tournament_finished_player";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GameSetup from "./components/chess-game/GameSetup";
@@ -168,6 +168,10 @@ const App = () => {
 						<Route
 							path="/todu/:id"
 							element={<UpcomingTournamentOrganizerView />}
+						/>
+						<Route
+							path="/todo"
+							element={<OrganizerTournamentDashboardOn />}
 						/>
 						<Route path="/tf" element={<TournamentFinished />} />
 						<Route
