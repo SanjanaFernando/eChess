@@ -114,6 +114,16 @@ const TournamentsPage = () => {
 		}
 	};
 
+	const handleStartTournament = (tournamentId) => {
+		console.log(`Starting tournament: ${tournamentId}`);
+		// Add logic to start the tournament
+	};
+
+	const handleFinishTournament = (tournamentId) => {
+		console.log(`Finishing tournament: ${tournamentId}`);
+		// Add logic to finish the tournament
+	};
+
 	const TournamentTable = ({ tournaments }) => (
 		<div className="bg-white mt-4 p-6 rounded-md shadow-md">
 			<table className="min-w-full border border-gray-300">
@@ -206,15 +216,33 @@ const TournamentsPage = () => {
 								</>
 							)}
 							<td className="p-4 text-blue-500 text-right">
-								<button
-									onClick={() =>
-										handleViewButtonClick(tournament.id)
-									}
-									className="flex items-center space-x-1"
-								>
-									<span>ℹ️</span>
-									<span>View</span>
-								</button>
+								<div className="flex items-center space-x-2">
+									{activeTab === "Upcoming" && (
+										<button
+											onClick={() => handleStartTournament(tournament.id)}
+											className="flex items-center space-x-1"
+										>
+											<span className="text-2xl">▶️</span>
+											<span>Start</span>
+										</button>
+									)}
+									{activeTab === "Ongoing" && (
+										<button
+											onClick={() => handleFinishTournament(tournament.id)}
+											className="flex items-center space-x-1"
+										>
+											<span className="text-2xl">⏹️</span>
+											<span>Finish</span>
+										</button>
+									)}
+									<button
+										onClick={() => handleViewButtonClick(tournament.id)}
+										className="flex items-center space-x-1"
+									>
+										<span className="text-2xl">ℹ️</span>
+										<span>View</span>
+									</button>
+								</div>
 							</td>
 						</tr>
 					))}
