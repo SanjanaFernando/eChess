@@ -107,6 +107,8 @@ const TournamentsPage = () => {
 	const handleViewButtonClick = (tournamentId) => {
 		if (activeTab === "Completed") {
 			navigate("/tpf");
+		} else if (activeTab === "Ongoing") {
+			navigate("/todo");
 		} else {
 			navigate(`/todu/${tournamentId}`);
 		}
