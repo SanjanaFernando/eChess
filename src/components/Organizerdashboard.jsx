@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getClassifiedTournaments } from "../state/tournament-api";
+import { getClassifiedTournaments, deleteTournament } from "../state/tournament-api";
 import { tokenDecode } from "../utils/token";
 
 const TournamentsPage = () => {
@@ -124,6 +124,22 @@ const TournamentsPage = () => {
 		// Add logic to finish the tournament
 	};
 
+	const handleDeleteTournament = async (tournamentId) => {
+		try {
+			// Remove any potential trailing :1 from the ID
+			const cleanTournamentId = tournamentId.split(':')[0];
+			await deleteTournament(cleanTournamentId);
+			// Refresh the tournaments data
+			const tournaments = await getClassifiedTournaments();
+			setTournamentData(tournaments);
+			// Show success message
+			alert('Tournament deleted successfully');
+		} catch (error) {
+			console.error("Error deleting tournament:", error);
+			alert('Failed to delete tournament. Please try again.');
+		}
+	};
+
 	const TournamentTable = ({ tournaments }) => (
 		<div className="bg-white mt-4 p-6 rounded-md shadow-md">
 			<table className="min-w-full border border-gray-300">
@@ -241,6 +257,13 @@ const TournamentsPage = () => {
 									>
 										<span className="text-2xl">ℹ️</span>
 										<span>View</span>
+									</button>
+									<button
+										onClick={() => handleDeleteTournament(tournament.id)}
+										className="flex items-center space-x-1 text-red-500 hover:text-red-700"
+									>
+										<span className="text-2xl">🗑️</span>
+										<span>Delete</span>
 									</button>
 								</div>
 							</td>
