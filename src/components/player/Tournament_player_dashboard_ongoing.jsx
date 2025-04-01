@@ -6,6 +6,11 @@ const TournamentDashboard = () => {
   const navigate = useNavigate(); // Initialize useNavigate for navigation
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTournamentsTab, setIsTournamentsTab] = useState(true); // Assuming this is the default active tab
+  // Add rounds state for read-only display
+  const [rounds] = useState([
+    { id: 1, player1: "John Doe", player2: "Jane Smith", started: false },
+    { id: 2, player1: "Alice Brown", player2: "Bob Johnson", started: false },
+  ]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -215,6 +220,34 @@ const TournamentDashboard = () => {
               <p>View Results</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Rounds Section - Read Only */}
+      <section className="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h2 className="text-xl font-semibold mb-4">Current Rounds</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {rounds.map((round) => (
+            <div
+              key={round.id}
+              className="p-4 border rounded-lg shadow-sm bg-gray-50"
+            >
+              <div className="text-center mb-2 p-2 border rounded bg-white">
+                {round.player1}
+              </div>
+              <p className="text-center text-lg font-semibold">VS</p>
+              <div className="text-center mt-2 p-2 border rounded bg-white">
+                {round.player2}
+              </div>
+              <div className="flex justify-center mt-4">
+                <span className={`px-4 py-2 rounded text-white ${
+                  round.started ? "bg-gray-400" : "bg-blue-500"
+                }`}>
+                  {round.started ? "Round Started" : "Round Not Started"}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
