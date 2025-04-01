@@ -29,79 +29,32 @@ const PlayerDashboard = () => {
 	// Fetch tournament data
 	const fetchTournamentData = async (tab) => {
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-
+			setLoading(true);
 			const token = localStorage.getItem("token");
 			const decodedToken = tokenDecode(token);
 
-			// Fetch data from APIs
-			const upcomingTournamentsRaw = await getTournamentsByStatus({
-				status: "UPCOMING",
-				userId: decodedToken.id,
-			});
-			const registeredTournaments = await playerTournaments({
-				userId: decodedToken.id,
-			});
-
-			// Add the same image to all tournament objects
-			const upcomingTournaments = upcomingTournamentsRaw.map(
-				(tournament) => ({
-					...tournament,
-					img: "/trophy.png",
-				})
-			);
-
-			const registeredTournamentsWithImages = registeredTournaments.map(
-				(tournament) => ({
-					...tournament,
-					img: "/trophy.png",
-				})
-			);
-
-			// Mock data for other tabs
-			const ongoingTournaments = [
-				{
-					name: "74th Oregon Open",
-					club: "Oregon Chess Federation",
-					entryType: "Paid",
-					img: "/trophy.png",
-				},
-			];
-
-			const finishedTournaments = [
-				{
-					name: "2025 Winter Chess Championship",
-					club: "California Chess Club",
-					entryType: "Free",
-					img: "/trophy.png",
-				},
-				{
-					name: "2025 Summer Chess Championship",
-					club: "Sample Chess Club 2",
-					entryType: "Paid",
-					img: "/trophy.png",
-				},
-				{
-					name: "2025 Winter Chess Championship",
-					club: "Sample Chess Club 1",
-					entryType: "Free",
-					img: "/trophy.png",
-				},
-			];
-
-			
-
-			// Combine data for all tabs
-			const data = {
-				Upcoming: upcomingTournaments,
-				Registered: registeredTournamentsWithImages,
-				Ongoing: ongoingTournaments,
-				Finished: finishedTournaments,
+			const statusMap = {
+				Upcoming: "UPCOMING",
+				Ongoing: "ONGOING",
+				Finished: "COMPLETED",
+				Registered: "REGISTERED",
 			};
 
-			setTournaments(data[tab] || []);
+			const tournaments = await getTournamentsByStatus({
+				status: statusMap[tab],
+				userId: decodedToken.id,
+			});
+
+			// Add default images to tournaments
+			const tournamentsWithImages = tournaments.map((tournament) => ({
+				...tournament,
+				img: "/trophy.png",
+			}));
+
+			setTournaments(tournamentsWithImages);
 		} catch (error) {
 			console.error("Error fetching tournaments: ", error);
+			setTournaments([]);
 		} finally {
 			setLoading(false);
 		}
@@ -148,8 +101,11 @@ const PlayerDashboard = () => {
 	};
 
 	const filteredTournaments = tournaments.filter((tournament) => {
-		const matchesEntryType = entryType === "Entry Type" || tournament.entryType === entryType;
-		const matchesSearchQuery = tournament.name.toLowerCase().includes(searchQuery.toLowerCase());
+		const matchesEntryType =
+			entryType === "Entry Type" || tournament.entryType === entryType;
+		const matchesSearchQuery = tournament.name
+			.toLowerCase()
+			.includes(searchQuery.toLowerCase());
 		return matchesEntryType && matchesSearchQuery;
 	});
 
@@ -306,7 +262,9 @@ const PlayerDashboard = () => {
 									<>
 										{tournament.isPlayerRegistered ? (
 											<button
-												onClick={() => navigate("/tpdu")}
+												onClick={() =>
+													navigate("/tpdu")
+												}
 												className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 											>
 												View
@@ -314,14 +272,18 @@ const PlayerDashboard = () => {
 										) : (
 											<>
 												<button
-													onClick={() => navigate("/tpdu")}
+													onClick={() =>
+														navigate("/tpdu")
+													}
 													className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 												>
 													View
 												</button>
 												<button
 													onClick={() =>
-														handleTournamentButtonClick(tournament)
+														handleTournamentButtonClick(
+															tournament
+														)
 													}
 													className="bg-blue text-white px-4 py-2 rounded-md font-semibold"
 												>
@@ -360,7 +322,11 @@ const PlayerDashboard = () => {
 					))
 				) : (
 					<p className="text-center text-gray-500">
-						No tournaments available in this tab.
+						{activeTab === "Upcoming"
+							? "No upcoming tournaments available."
+							: activeTab === "Registered"
+							? "You haven't registered for any tournaments yet."
+							: `No ${activeTab.toLowerCase()} tournaments found.`}
 					</p>
 				)}
 			</div>
