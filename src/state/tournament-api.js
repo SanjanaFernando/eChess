@@ -22,6 +22,18 @@ export const createTournament = async (data) => {
     }
 }
 
+export const deleteTournament = async (tournamentId) => {
+    try {
+        const response = await axios.delete(`${API_URL}/tournaments/${tournamentId}`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting tournament: ', error);
+        throw error;
+    }
+};
+
 export const getTournaments = async () => {
     try {
         const response = await axios.get(`${API_URL}/tournaments`, {
@@ -121,3 +133,4 @@ export const acceptPlayerRegistration = async (tournamentId, playerId) => {
         throw error;
     }
 };
+
