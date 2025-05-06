@@ -29,6 +29,7 @@ import GameSetup from "./components/chess-game/GameSetup";
 import UpcomingTournamentOrganizerView from "./components/organizer/Tournament_organizer_dashboard_upcomming";
 import UserProfile from "./components/UserProfile";
 import UpdateUserProfile from "./components/UpdateUserProfile";
+import PlayersPage from "./components/players";
 
 const App = () => {
 	return (
@@ -160,6 +161,16 @@ const App = () => {
 									roles={["PLAYER"]}
 								/>
 							}
+						/>
+						<Route
+						path="/pp"
+							element={
+								<ProtectedRoute
+									element={<PlayersPage />}
+									roles={["ORGANIZER"]}
+								/>
+							}
+
 						/>
 						<Route
 							path="/tpf"

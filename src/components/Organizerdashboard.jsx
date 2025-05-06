@@ -295,6 +295,13 @@ const TournamentsPage = () => {
 					>
 						Create
 					</a>
+					<a
+						href="/pp"
+						className="text-gray-800 font-medium"
+						
+					>
+						Players
+					</a>
 					
 					<a href="/opay" className="text-gray-800 font-medium">
 						Payments
