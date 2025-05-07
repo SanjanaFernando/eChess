@@ -77,19 +77,19 @@ function ChessGame() {
 	}, []);
 
 	return (
-		<div className="app">
-			<div className="header">
+		<div className="app flex flex-col items-center p-4">
+			<div className="header mb-4">
 				<img
 					src="DarkLogo.png"
 					alt="Game Image"
-					className="game-image"
+					className="game-image w-32 h-auto"
 				/>
 			</div>
-			<div className="chessboard-container">
+			<div className="chessboard-container flex flex-col items-center">
 				<Chessboard position={game.fen()} onPieceDrop={onDrop} />
 				{gameOver && (
-					<div className="game-over">
-						<p>Game Over</p>
+					<div className="game-over mt-4 text-center">
+						<p className="text-lg font-semibold">Game Over</p>
 						<p>Winner: {winner}</p>
 						<p>Press Enter to restart</p>
 					</div>
