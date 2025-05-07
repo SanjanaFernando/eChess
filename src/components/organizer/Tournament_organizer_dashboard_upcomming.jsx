@@ -211,7 +211,7 @@ const UpcomingTournamentOrganizerView = () => {
           </div>
 
           {/* Image Placeholder */}
-          <div className="bg-gray-200 rounded-lg h-64">
+          <div className="bg-gray-200 rounded-lg h-64 md:h-auto">
             <img
               src={colomboImage}
               alt="Tournament"
