@@ -21,7 +21,7 @@ const ChessGame = () => {
   useEffect(() => {
     if (gameMode === "online") {
       // Connect to the Socket.IO server
-      socket.current = io("http://localhost:8000"); // Update to match the server's port
+      const socket = io(import.meta.env.VITE_API_URL); // Use VITE_API_URL from environment variables
 
       // Show waiting message
       socket.current.on("waiting-for-opponent", () => {
