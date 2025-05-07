@@ -1,52 +1,101 @@
 import { Chess } from "chess.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Chessboard } from "react-chessboard";
-import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { io } from "socket.io-client";
 
 const ChessGame = () => {
   const location = useLocation();
-  const { gameMode, difficulty, timeControl, color } = location.state || {};
+  const { gameMode, color } = location.state || {};
   const [game, setGame] = useState(new Chess());
-  const [winner, setWinner] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
-  const [moveHistory, setMoveHistory] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
-  const [modalMessage, setModalMessage] = useState(null);
-
-  // Dummy player data
-  const players = {
-    white: {
-      name: "John Doe",
-      rating: 1450,
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    black: {
-      name: "AI Stockfish",
-      rating: 2500,
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/3/33/Stockfish_Logo.png",
-    },
-  };
+  const [waitingForOpponent, setWaitingForOpponent] = useState(false);
+  const [currentTurn, setCurrentTurn] = useState("white"); // Track whose turn it is
+  const [moveHistory, setMoveHistory] = useState([]); // Store move history as an array of turns
+  const socket = useRef(null);
+  const [roomId, setRoomId] = useState(null);
+  const [drawRequested, setDrawRequested] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [winner, setWinner] = useState(null); // Track the winner
 
   useEffect(() => {
-    if (color === "black" && gameStarted) {
-      makeStockfishMove();
+    if (gameMode === "online") {
+      // Connect to the Socket.IO server
+      socket.current = io("http://localhost:8000"); // Update to match the server's port
+
+      // Show waiting message
+      socket.current.on("waiting-for-opponent", () => {
+        setWaitingForOpponent(true);
+      });
+
+      // Listen for matchmaking events
+      socket.current.on("match-found", ({ roomId, color }) => {
+        setRoomId(roomId);
+        setGameStarted(true);
+        setWaitingForOpponent(false);
+        console.log(`Match found! Room ID: ${roomId}, Your color: ${color}`);
+      });
+
+      // Listen for opponent's moves
+      socket.current.on("opponent-move", (move) => {
+        safeGameMutate((game) => {
+          game.move(move);
+        });
+
+        // Update move history with the opponent's move
+        setMoveHistory((prevHistory) => {
+          const lastTurn = prevHistory[prevHistory.length - 1];
+
+          if (color === "black") {
+            // If opponent is white, add a new turn
+            return [...prevHistory, { white: move.san, black: null }];
+          } else {
+            // If opponent is black, update the last turn
+            if (lastTurn && lastTurn.black === null) {
+              // Create a new object for the updated turn
+              const updatedTurn = { ...lastTurn, black: move.san };
+              return [...prevHistory.slice(0, -1), updatedTurn];
+            } else {
+              // If no last turn exists, create a new one
+              return [...prevHistory, { white: null, black: move.san }];
+            }
+          }
+        });
+
+        // Switch turn
+        setCurrentTurn((prevTurn) =>
+          prevTurn === "white" ? "black" : "white"
+        );
+      });
+
+      // Listen for draw request from opponent
+      socket.current.on("draw-requested", () => {
+        if (window.confirm("Your opponent has requested a draw. Do you accept?")) {
+          socket.current.emit("draw-accepted", { roomId });
+          resetGame();
+        } else {
+          socket.current.emit("draw-rejected", { roomId });
+        }
+      });
+
+      // Listen for draw acceptance
+      socket.current.on("draw-accepted", () => {
+        alert("Draw accepted! The game is a draw.");
+        resetGame();
+      });
+
+      // Listen for resign event
+      socket.current.on("opponent-resigned", () => {
+        alert("Your opponent has resigned. You win!");
+        resetGame();
+      });
+
+      // Cleanup on component unmount
+      return () => {
+        if (socket.current) socket.current.disconnect();
+      };
     }
-  }, [color, gameStarted]);
-
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === "Enter" && gameOver) {
-        restartGame();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [gameOver]);
+  }, [gameMode]);
 
   const safeGameMutate = (modify) => {
     setGame((g) => {
@@ -56,232 +105,178 @@ const ChessGame = () => {
     });
   };
 
-  const makeStockfishMove = async () => {
-    if (game.game_over() || game.in_draw()) {
-      setGameOver(true);
-      const winner = game.turn() === "w" ? "Black" : "White";
-      setWinner(winner);
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        "https://stockfish.online/api/s/v2.php",
-        {
-          params: {
-            fen: game.fen(),
-            depth: difficulty,
-          },
-        }
-      );
-
-      if (response.data.success) {
-        const bestMove = response.data.bestmove.split(" ")[1];
-        safeGameMutate((game) => {
-          const move = game.move({
-            from: bestMove.slice(0, 2),
-            to: bestMove.slice(2, 4),
-            promotion: "q",
-          });
-          if (move) {
-            setMoveHistory((prev) => [...prev, move.san]);
-          }
-        });
-      } else {
-        console.error(
-          "Error fetching move from Stockfish API:",
-          response.data.error
-        );
-      }
-    } catch (error) {
-      console.error("Error connecting to Stockfish API:", error);
-    }
-  };
-
-  const onDrop = (source, target) => {
-    if (gameOver || !gameStarted) return false;
-
-    const newGame = new Chess(game.fen());
-    const move = newGame.move({
-      from: source,
-      to: target,
-      promotion: "q",
-    });
-
-    if (!move) return false;
-    setGame(newGame);
-    setMoveHistory((prev) => [...prev, move.san]);
-    setTimeout(makeStockfishMove, 200);
-    return true;
-  };
-
-  const restartGame = () => {
+  const resetGame = () => {
     setGame(new Chess());
+    setGameStarted(false);
+    setWaitingForOpponent(false);
+    setCurrentTurn("white");
+    setMoveHistory([]);
+    setRoomId(null);
     setGameOver(false);
     setWinner(null);
-    setMoveHistory([]);
-    setGameStarted(false);
-    setModalMessage(null);
   };
 
-  const handlePlayClick = () => {
-    setGameStarted(true);
+  const onPieceDrop = (source, target) => {
+    if (!gameStarted) return false;
+
+    // Prevent moves if it's not the player's turn
+    if (currentTurn !== color) {
+      console.log("It's not your turn!");
+      return false;
+    }
+
+    const move = game.move({
+      from: source,
+      to: target,
+      promotion: "q", // Always promote to a queen for simplicity
+    });
+
+    // Prevent moves if the player tries to move the opponent's pieces
+    if (!move || move.color !== color[0]) {
+      console.log("You can only move your own pieces!");
+      return false;
+    }
+
+    if (move) {
+      // Update local game state
+      setGame(new Chess(game.fen()));
+
+      // Emit the move to the opponent
+      if (gameMode === "online" && socket.current) {
+        socket.current.emit("move", { roomId, move });
+      }
+
+      // Update move history with the player's move
+      setMoveHistory((prevHistory) => {
+        const lastTurn = prevHistory[prevHistory.length - 1];
+
+        if (color === "white") {
+          // If it's white's move, add a new turn
+          return [...prevHistory, { white: move.san, black: null }];
+        } else {
+          // If it's black's move, update the last turn
+          if (lastTurn && lastTurn.black === null) {
+            // Create a new object for the updated turn
+            const updatedTurn = { ...lastTurn, black: move.san };
+            return [...prevHistory.slice(0, -1), updatedTurn];
+          } else {
+            // If no last turn exists, create a new one
+            return [...prevHistory, { white: null, black: move.san }];
+          }
+        }
+      });
+
+      // Switch turn
+      setCurrentTurn((prevTurn) => (prevTurn === "white" ? "black" : "white"));
+
+      return true;
+    }
+
+    return false;
   };
 
-  const handleDrawClick = () => {
-    setModalMessage("Opponent says no draw, keep playing!");
+  const handleDrawRequest = () => {
+    if (gameMode === "online" && socket.current) {
+      socket.current.emit("request-draw", { roomId });
+      alert("Draw request sent to your opponent.");
+    }
   };
 
-  const handleResignClick = () => {
-    setGameOver(true);
-    setWinner(color === "white" ? "Black" : "White"); // Determine winner based on the assigned color
-  };
-
-  const closeModal = () => {
-    setModalMessage(null);
+  const handleResign = () => {
+    if (window.confirm("Are you sure you want to resign?")) {
+      if (gameMode === "online" && socket.current) {
+        socket.current.emit("resign", { roomId });
+      }
+      alert("You have resigned. Your opponent wins!");
+      resetGame();
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      {/* Players Info */}
-      <div className="flex justify-between w-full max-w-3xl bg-white p-4 rounded-xl mb-4 shadow-lg border border-gray-300">
-        {/* White Player */}
-        <div className="flex items-center space-x-3">
-          <img
-            src={players.white.image}
-            alt="White Player"
-            className="w-12 h-12 rounded-full border-2 border-gray-400"
-          />
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              {players.white.name}
-            </h3>
-            <p className="text-gray-600">♔ {players.white.rating}</p>
-          </div>
-        </div>
-
-        <span className="text-gray-500 text-sm">VS</span>
-
-        {/* Black Player */}
-        <div className="flex items-center space-x-3">
-          <div className="text-right">
-            <h3 className="text-lg font-semibold text-gray-800">
-              {players.black.name}
-            </h3>
-            <p className="text-gray-600">♚ {players.black.rating}</p>
-          </div>
-          <img
-            src={players.black.image}
-            alt="Black Player"
-            className="w-12 h-12 rounded-full border-2 border-gray-400"
-          />
-        </div>
-      </div>
-
-      {/* Chessboard + Move History */}
-      <div className="flex w-full max-w-5xl space-x-6">
-        {/* Chessboard */}
-        <div className="flex-1 flex items-center justify-center bg-white p-4 rounded-xl shadow-lg border border-gray-300">
-          <Chessboard
-            position={game.fen()}
-            onPieceDrop={onDrop}
-            boardOrientation={color === "black" ? "black" : "white"} // Set board orientation
-          />
-        </div>
-
-        {/* Move History */}
-        <div className="w-1/4 bg-white p-4 rounded-xl shadow-lg border border-gray-300 text-gray-800">
-          {!gameStarted ? (
-            <button
-              onClick={handlePlayClick}
-              className="w-full bg-blue text-white py-2 px-4 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Play
-            </button>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white p-6">
+      {!gameStarted ? (
+        <div className="text-center">
+          {waitingForOpponent ? (
+            <h1 className="text-2xl font-bold mb-4">
+              ⏳ Waiting for an opponent...
+            </h1>
           ) : (
-            <div className="flex justify-between space-x-2">
-              <button
-                className="flex-1 bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-semibold hover:bg-gray-400 transition"
-                onClick={handleDrawClick}
-              >
-                Draw
-              </button>
-              <button
-                className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-red-600 transition"
-                onClick={handleResignClick}
-              >
-                Resign
-              </button>
-            </div>
+            <h1 className="text-2xl font-bold mb-4">
+              🔗 Connecting to server...
+            </h1>
           )}
-
-          <h3 className="text-lg font-semibold text-center mt-4 mb-2">
-            📜 Move History
-          </h3>
-          <div className="h-64 overflow-y-auto border-t border-gray-300 pt-2">
-            {moveHistory.length === 0 ? (
-              <p className="text-gray-500 text-center">No moves yet</p>
-            ) : (
-              <table className="w-full text-left text-gray-700">
-                <thead>
-                  <tr>
-                    <th className="px-2 py-1">#</th>
-                    <th className="px-2 py-1">Your Move</th>
-                    <th className="px-2 py-1">Opponent's Move</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {moveHistory
-                    .reduce((rows, move, index) => {
-                      if (index % 2 === 0) {
-                        rows.push([move]); // Start a new row for each turn
-                      } else {
-                        rows[rows.length - 1].push(move); // Add opponent's move to the same row
-                      }
-                      return rows;
-                    }, [])
-                    .map((turn, index) => (
-                      <tr key={index}>
-                        <td className="px-2 py-1">{index + 1}</td>
-                        <td className="px-2 py-1">{turn[0] || "-"}</td>
-                        <td className="px-2 py-1">{turn[1] || "-"}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            )}
-          </div>
         </div>
-      </div>
-
-      {/* Modal */}
-      {modalMessage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center animate-fade-in">
-            <p className="text-lg font-semibold text-gray-800">
-              {modalMessage}
-            </p>
-            <button
-              onClick={closeModal}
-              className="mt-4 bg-blue text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
-            >
-              Close
-            </button>
+      ) : (
+        <div className="flex flex-col items-center w-full max-w-6xl bg-white p-4 rounded-lg shadow-lg border border-gray-300">
+          {/* Player Details (Top) */}
+          <div className="w-full flex justify-center mb-4">
+            <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center w-1/3">
+              <h2
+                className={`text-lg font-bold ${
+                  currentTurn === "white" ? "text-blue-500" : "text-gray-700"
+                }`}
+              >
+                🧑 Player 2 (Opponent)
+              </h2>
+              <p>⚪ Color: {color}</p>
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* Game Over Overlay */}
-      {gameOver && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center animate-fade-in">
-            <h1 className="text-3xl font-bold mb-2 text-gray-800">Game Over</h1>
-            <p className="text-xl font-semibold mb-4 text-gray-800">
-              🏆 Winner: {winner}
-            </p>
-            <p className="text-sm text-gray-600">
-              Press <span className="font-bold">Enter</span> to restart
-            </p>
+          {/* Chessboard and Move History */}
+          <div className="flex w-full">
+            {/* Chessboard */}
+            <div className="flex-1 flex items-center justify-center bg-gray-100 p-4 rounded-lg shadow-lg border border-gray-300">
+              <Chessboard
+                position={game.fen()}
+                onPieceDrop={onPieceDrop}
+                boardOrientation={color === "black" ? "black" : "white"}
+              />
+            </div>
+
+            {/* Move History */}
+            <div className="w-1/4 ml-4 bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-300">
+              <h3 className="text-lg font-bold mb-2">📜 Move History</h3>
+              <ul className="list-none pl-0 h-64 overflow-y-auto">
+                {moveHistory.map((turn, index) => (
+                  <li key={index} className="flex justify-between">
+                    <span>
+                      {index + 1}. {turn.white || ""}
+                    </span>
+                    <span>{turn.black || ""}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Buttons */}
+              <div className="mt-4">
+                <button
+                  className="w-full bg-green-500 text-white py-2 rounded-lg mb-2 hover:bg-green-600"
+                  onClick={handleDrawRequest}
+                >
+                  🤝 Offer Draw
+                </button>
+                <button
+                  className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+                  onClick={handleResign}
+                >
+                  🏳️ Resign
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Player Details (Bottom) */}
+          <div className="w-full flex justify-center mt-4">
+            <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center w-1/3">
+              <h2
+                className={`text-lg font-bold ${
+                  currentTurn === "black" ? "text-blue-500" : "text-gray-700"
+                }`}
+              >
+                🧑 Player 1 (You)
+              </h2>
+              <p>⚫ Color: {color === "white" ? "black" : "white"}</p>
+            </div>
           </div>
         </div>
       )}
