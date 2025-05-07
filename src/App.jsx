@@ -144,16 +144,16 @@ const App = () => {
 							}
 						/>
 						<Route
-							path="/tpdu"
+							path="/tpdu/:id"
 							element={
 								<ProtectedRoute
 									element={<TournamentDashboardUp />}
 									roles={["PLAYER"]}
 								/>
 							}
-						/>						
+						/>
 						<Route
-							path="/tpdo"
+							path="/tpdo/:id"
 							element={
 								<ProtectedRoute
 									element={<TournamentDashboardOn />}
@@ -162,7 +162,7 @@ const App = () => {
 							}
 						/>
 						<Route
-							path="/tpf"
+							path="/tpf/:id"
 							element={<FinishedTournamentPage />}
 						/>
 						<Route

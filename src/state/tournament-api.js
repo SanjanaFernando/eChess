@@ -150,3 +150,16 @@ export const acceptPlayerRegistration = async (tournamentId, playerId) => {
     }
 };
 
+
+export const updateTournamentStatus = async (tournamentId, status) => {
+    try {
+        const response = await axios.put(`${API_URL}/tournaments/${tournamentId}/status`, { status }, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating tournament status: ', error);
+        throw error;        
+    }
+}
+
