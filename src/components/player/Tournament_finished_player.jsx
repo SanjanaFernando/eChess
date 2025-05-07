@@ -71,9 +71,9 @@ const FinishedTournamentPage = () => {
      );
    };
   return (
-    <div className="font-sans antialiased text-gray-900">
+    <div className="font-sans antialiased text-gray-900 p-4">
       {/* Navbar */}
-      <nav className="bg-gray-200 p-4 flex justify-between items-center mb-8 rounded-md shadow">
+      <nav className="bg-gray-200 p-4 flex flex-col sm:flex-row justify-between items-center mb-8 rounded-md shadow">
         <h1 className="text-xl font-semibold text-gray-800 flex items-center">
           <div className="flex items-center">
             <img
@@ -84,7 +84,7 @@ const FinishedTournamentPage = () => {
           </div>
         </h1>
         {/* Navigation Links */}
-        <div className="flex space-x-8">
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8">
           <a
             href="/chess-game-setup"
             className="text-gray-800 font-medium hover:text-gray-600"
@@ -107,9 +107,9 @@ const FinishedTournamentPage = () => {
           </a>
         </div>
         {/* Dropdown */}
-        <div className="relative">
+        <div className="relative mt-4 sm:mt-0">
           <div
-            className="mt-4 sm:mt-0 flex items-center cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               toggleDropdown();
