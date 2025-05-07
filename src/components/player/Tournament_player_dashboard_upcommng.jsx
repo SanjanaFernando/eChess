@@ -168,14 +168,14 @@ const TournamentPage = () => {
               of Colombo.
             </p>
             {isRegistered && ( // Conditionally render the button
-              <button className="bg-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Register
               </button>
             )}
           </div>
 
           {/* Image Placeholder */}
-          <div className="bg-gray-200 rounded-lg h-64">
+          <div className="bg-gray-200 rounded-lg h-64 md:h-auto">
             <img
               src="colombo.jpg"
               alt="Tournament"
@@ -191,7 +191,7 @@ const TournamentPage = () => {
           <h2 className="text-2xl font-extrabold text-gray-900 mb-8 text-center">
             Tournament Details
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Payments */}
             <div className="text-center">
               {/* Payment Icon */}

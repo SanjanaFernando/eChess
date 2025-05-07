@@ -163,7 +163,7 @@ const TournamentDashboard = () => {
               tournament that brings together chess enthusiasts from across Sri
               Lanka. This open event welcomes players of all skill levels, from
               seasoned grandmasters to enthusiastic beginners. With rapid time
-              controls, the action is non- stop, offering exciting games and a
+              controls, the action is non-stop, offering exciting games and a
               chance to test your quick-thinking strategies. Compete for prize
               money, rating points, and the coveted title of Colombo Rapid Chess
               Open Champion! Join us for a day of thrilling chess in the heart
@@ -173,7 +173,7 @@ const TournamentDashboard = () => {
           </div>
 
           {/* Image Placeholder */}
-          <div className="bg-gray-200 rounded-lg h-64">
+          <div className="bg-gray-200 rounded-lg h-64 md:h-auto">
             <img
               src="colombo.jpg"
               alt="Tournament"
