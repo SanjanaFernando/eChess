@@ -21,7 +21,7 @@ const ChessGame = () => {
   useEffect(() => {
     if (gameMode === "online") {
       // Connect to the Socket.IO server
-      const socket = io(import.meta.env.VITE_API_URL); // Use VITE_API_URL from environment variables
+      socket.current = io("https://echess-server.onrender.com"); // Update to match the server's port
 
       // Show waiting message
       socket.current.on("waiting-for-opponent", () => {
