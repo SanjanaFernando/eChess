@@ -58,6 +58,7 @@ const FinishedTournamentPage = () => {
 		}
 	}, [totalSlides]);
 
+
 	const nextSlide = () => {
 		setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
 	};

@@ -306,7 +306,7 @@ const TournamentsPage = () => {
 	return (
 		<div className="bg-gray-100 min-h-screen p-6" onClick={closeDropdown}>
 			{/* Navbar */}
-			<nav className="bg-gray-200 p-4 flex justify-between items-center mb-8 rounded-md shadow">
+			<nav className="bg-gray-200 p-4 flex flex-col sm:flex-row justify-between items-center mb-8 rounded-md shadow">
 				<h1 className="text-xl font-semibold text-gray-800 flex items-center">
 					<div className="flex items-center">
 						<img
@@ -316,7 +316,7 @@ const TournamentsPage = () => {
 						/>
 					</div>
 				</h1>
-				<div className="flex space-x-8">
+				<div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8">
 					<a
 						href="#"
 						className="text-gray-800 font-medium"
@@ -324,14 +324,19 @@ const TournamentsPage = () => {
 					>
 						Create
 					</a>
-					
+					<a
+						href="/pp"
+						className="text-gray-800 font-medium"
+					>
+						Players
+					</a>
 					<a href="/opay" className="text-gray-800 font-medium">
 						Payments
 					</a>
 				</div>
-				<div className="relative">
+				<div className="relative mt-4 sm:mt-0">
 					<div
-						className="mt-4 sm:mt-0 flex items-center cursor-pointer"
+						className="flex items-center cursor-pointer"
 						onClick={(e) => {
 							e.stopPropagation();
 							toggleDropdown();
@@ -372,14 +377,12 @@ const TournamentsPage = () => {
 				<h2 className="text-lg font-semibold text-gray-700 mb-4">
 					Search for Tournaments
 				</h2>
-				<div className="flex items-center space-x-4">
-					
-
+				<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
 					<select
 						onChange={(e) =>
 							handleFilterChange("entry", e.target.value)
 						}
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
+						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full sm:w-48"
 					>
 						<option value="">Entry Type</option>
 						<option value="Free">Free</option>

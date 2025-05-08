@@ -32,7 +32,7 @@ const OrganizerDashboardOngoing = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-         {/* Header Section */}
+      {/* Header Section */}
       <header className="bg-gray-200 p-4 flex flex-col sm:flex-row justify-between items-center">
         <div className="flex items-center">
           <img src="/LogoB.png" alt="eChess Logo" className="h-10 mr-4" />
@@ -56,7 +56,6 @@ const OrganizerDashboardOngoing = () => {
         </div>
       </header>
       <header className="bg-red-100 p-6 rounded-lg shadow-lg mt-6 text-black text-center">
-
         <h1 className="text-2xl font-bold">Ongoing Tournament</h1>
       </header>
 

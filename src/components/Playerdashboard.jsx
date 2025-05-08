@@ -110,9 +110,9 @@ const PlayerDashboard = () => {
 	});
 
 	return (
-		<div className="bg-gray-100 min-h-screen p-6" onClick={closeDropdown}>
+		<div className="bg-gray-100 min-h-screen p-4 sm:p-6" onClick={closeDropdown}>
 			{/* Navbar */}
-			<nav className="bg-gray-200 p-4 flex justify-between items-center mb-8 rounded-md shadow">
+			<nav className="bg-gray-200 p-4 flex flex-col sm:flex-row justify-between items-center mb-8 rounded-md shadow">
 				<h1 className="text-xl font-semibold text-gray-800 flex items-center">
 					<div className="flex items-center">
 						<img
@@ -122,7 +122,7 @@ const PlayerDashboard = () => {
 						/>
 					</div>
 				</h1>
-				<div className="flex space-x-8">
+				<div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8">
 					<a
 						href="/chess-game-setup"
 						className="text-gray-800 font-medium"
@@ -133,9 +133,9 @@ const PlayerDashboard = () => {
 						Payments
 					</a>
 				</div>
-				<div className="relative">
+				<div className="relative mt-4 sm:mt-0">
 					<div
-						className="mt-4 sm:mt-0 flex items-center cursor-pointer"
+						className="flex items-center cursor-pointer"
 						onClick={(e) => {
 							e.stopPropagation();
 							toggleDropdown();
@@ -177,9 +177,9 @@ const PlayerDashboard = () => {
 				<h2 className="text-lg font-semibold text-gray-700 mb-4">
 					Search for Tournaments
 				</h2>
-				<div className="flex items-center space-x-4">
+				<div className="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-4">
 					<select
-						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-48"
+						className="bg-white p-2 rounded-full border border-gray-300 text-gray-600 w-full sm:w-48"
 						value={entryType}
 						onChange={(e) => setEntryType(e.target.value)}
 					>
@@ -187,7 +187,7 @@ const PlayerDashboard = () => {
 						<option>Free</option>
 						<option>Paid</option>
 					</select>
-					<div className="relative w-full max-w-md">
+					<div className="relative w-full max-w-md mt-2 sm:mt-0">
 						<input
 							type="text"
 							placeholder="Search"
@@ -203,13 +203,13 @@ const PlayerDashboard = () => {
 			</div>
 
 			{/* Tabs */}
-			<div className="flex space-x-4 mt-6">
+			<div className="flex flex-wrap space-x-4 mt-6">
 				{["Upcoming", "Registered", "Ongoing", "Finished"].map(
 					(tab) => (
 						<button
 							key={tab}
 							onClick={() => handleTabClick(tab)}
-							className={`font-medium px-4 py-2 rounded-t-md ${
+							className={`font-medium px-4 py-2 rounded-md ${
 								activeTab === tab
 									? "text-gray-700 border-b-2 border-gray-700"
 									: "text-gray-500"
@@ -231,7 +231,7 @@ const PlayerDashboard = () => {
 					filteredTournaments.map((tournament, index) => (
 						<div
 							key={index}
-							className="flex items-center justify-between bg-white p-4 rounded-md shadow-md border border-gray-200"
+							className="flex flex-col sm:flex-row items-center justify-between bg-white p-4 rounded-md shadow-md border border-gray-200"
 						>
 							<div className="flex items-center">
 								<img
@@ -257,7 +257,7 @@ const PlayerDashboard = () => {
 									</span>
 								</div>
 							</div>
-							<div className="flex space-x-2">
+							<div className="flex space-x-2 mt-2 sm:mt-0">
 								{activeTab === "Upcoming" && (
 									<>
 										{tournament.isPlayerRegistered ? (

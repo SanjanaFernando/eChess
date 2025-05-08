@@ -5,16 +5,16 @@ const Footer = () => {
   return (
     <footer className="text-center text-white">
       <div
-        className="bg-cover bg-center bg-no-repeat min-h-screen text-left flex flex-col justify-center px-20"
+        className="bg-cover bg-center bg-no-repeat min-h-screen text-left flex flex-col justify-center px-4 sm:px-20"
         style={{ backgroundImage: "url('chessboard1.jpg')" }}
       >
         <div className="bg-white/20 backdrop-blur-lg rounded-2xl shadow-lg shadow-gray-500/50 p-10 text-center">
-          <p className="font-bold text-7xl">Join the Chess Community Today</p>
-          <p className="my-8 text-xl">
+          <p className="font-bold text-4xl sm:text-7xl">Join the Chess Community Today</p>
+          <p className="my-8 text-lg sm:text-xl">
             Experience the thrill of online chess tournaments and connect with
             fellow players.
           </p>
-          <div className="flex my-8 justify-center">
+          <div className="flex flex-col sm:flex-row my-8 justify-center">
             <Link to="/signup">
               <button className="bg-blue text-white border-none py-3 px-10 cursor-pointer rounded text-lg transition duration-300 ease-in-out hover:bg-sky-500 hover:text-white">
                 Sign Up
