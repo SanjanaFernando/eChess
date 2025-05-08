@@ -79,12 +79,12 @@ const PlayerDashboard = () => {
 		}
 	};
 
-	const handleViewOngoing = () => {
-		navigate("/tpdo");
+	const handleViewOngoing = (tournamentId) => () => {
+		navigate(`/tpdo/${tournamentId}`);
 	};
 
-	const handleViewFinished = () => {
-		navigate("/tpf");
+	const handleViewFinished = (tournamentId) => () => {
+		navigate(`/tpf/${tournamentId}`);
 	};
 
 	const handleProfileView = (e) => {
@@ -263,7 +263,9 @@ const PlayerDashboard = () => {
 										{tournament.isPlayerRegistered ? (
 											<button
 												onClick={() =>
-													navigate("/tpdu")
+													navigate(
+														`/tpdu/${tournament._id}`
+													)
 												}
 												className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 											>
@@ -273,7 +275,9 @@ const PlayerDashboard = () => {
 											<>
 												<button
 													onClick={() =>
-														navigate("/tpdu")
+														navigate(
+															`/tpdu/${tournament._id}`
+														)
 													}
 													className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 												>
@@ -295,7 +299,9 @@ const PlayerDashboard = () => {
 								)}
 								{activeTab === "Ongoing" && (
 									<button
-										onClick={handleViewOngoing}
+										onClick={handleViewOngoing(
+											tournament._id
+										)}
 										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 									>
 										View
@@ -303,7 +309,9 @@ const PlayerDashboard = () => {
 								)}
 								{activeTab === "Finished" && (
 									<button
-										onClick={handleViewFinished}
+										onClick={handleViewFinished(
+											tournament._id
+										)}
 										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 									>
 										View
@@ -311,7 +319,9 @@ const PlayerDashboard = () => {
 								)}
 								{activeTab === "Registered" && (
 									<button
-										onClick={() => navigate("/tpdu")}
+										onClick={() =>
+											navigate(`/tpdu/${tournament._id}`)
+										}
 										className="bg-green-500 text-white px-4 py-2 rounded-md font-semibold"
 									>
 										View

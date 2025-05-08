@@ -22,7 +22,34 @@ const TournamentsPage = () => {
 		Upcoming: [],
 		Ongoing: [],
 		Completed: [],
-	});
+    });
+    
+    // Confirmation Dialog
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [confirmAction, setConfirmAction] = useState(null);
+    const [selectedTournament, setSelectedTournament] = useState(null);
+
+    const handleConfirmAction = async () => {
+        try {
+            if (confirmAction === 'start') {
+                await updateTournamentStatus(selectedTournament, 'ONGOING');
+            } else if (confirmAction === 'finish') {
+                await updateTournamentStatus(selectedTournament, 'COMPLETED');
+            } else if (confirmAction === 'delete') {
+                await deleteTournament(selectedTournament);
+            }
+
+            // Refresh tournament data
+            const tournaments = await getClassifiedTournaments();
+            setTournamentData(tournaments);
+        } catch (error) {
+            console.error(`Error ${confirmAction}ing tournament: `, error);
+        } finally {
+            setShowConfirmDialog(false);
+            setConfirmAction(null);
+            setSelectedTournament(null);
+        }
+    }
 
 	useEffect(() => {
 		const fetchTournaments = async () => {
@@ -115,13 +142,15 @@ const TournamentsPage = () => {
 	};
 
 	const handleStartTournament = (tournamentId) => {
-		console.log(`Starting tournament: ${tournamentId}`);
-		// Add logic to start the tournament
+        setSelectedTournament(tournamentId);
+        setConfirmAction('start');
+        setShowConfirmDialog(true);
 	};
 
 	const handleFinishTournament = (tournamentId) => {
-		console.log(`Finishing tournament: ${tournamentId}`);
-		// Add logic to finish the tournament
+        setSelectedTournament(tournamentId);
+        setConfirmAction('finish');
+        setShowConfirmDialog(true);
 	};
 
 	const handleDeleteTournament = async (tournamentId) => {
