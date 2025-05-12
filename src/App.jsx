@@ -30,103 +30,90 @@ import UpcomingTournamentOrganizerView from "./components/organizer/Tournament_o
 import UserProfile from "./components/UserProfile";
 import UpdateUserProfile from "./components/UpdateUserProfile";
 import PlayersPage from "./components/players";
+import ChessboardComponent from "./components/chess-game/Chessboard";
+import { Chessboard } from "react-chessboard";
 
 const App = () => {
-	return (
-		<Router>
-			<div>
-				<main>
-					<Routes>
-						<Route path="/" element={<Hero />} />
-						<Route
-							path="/forgot-password"
-							element={<ForgotPassword />}
-						/>
-						<Route
-							path="reset-password/:token"
-							element={<ResetPassword />}
-						/>
-						<Route path="/login" element={<Login />} />
-						<Route path="/signup" element={<Signup />} />
-						<Route path="/profile/:id" element={<UserProfile />} />
-						<Route
-							path="/edit-profile/:id"
-							element={<UpdateUserProfile />}
-						/>
+  return (
+    <Router>
+      <div>
+        <main>
+          <Routes>
+            <Route path="/" element={<Hero />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password/:token" element={<ResetPassword />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/profile/:id" element={<UserProfile />} />
+            <Route path="/edit-profile/:id" element={<UpdateUserProfile />} />
 
-						<Route path="/payment" element={<Payment />} />
-						<Route
-							path="/player-dashboard"
-							element={
-								<ProtectedRoute
-									element={<PlayerDashboard />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/signup-organizer"
-							element={
-								<ProtectedRoute
-									element={<SignupOrganizer />}
-									roles={["ORGANIZER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/payment-success"
-							element={<PaymentSuccess />}
-						/>
-						<Route
-							path="/payment-cancel"
-							element={<PaymentCancel />}
-						/>
-						<Route
-							path="/tournament-registration/:id"
-							element={
-								<ProtectedRoute
-									element={<TournamentRegistration />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/organizer-dashboard"
-							element={
-								<ProtectedRoute
-									element={<Organizerdashboardnew />}
-									roles={["ORGANIZER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/create-tournament"
-							element={
-								<ProtectedRoute
-									element={<CreateTournament />}
-									roles={["ORGANIZER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/update-tournament"
-							element={
-								<ProtectedRoute
-									element={<UpdateTournament />}
-									roles={["ORGANIZER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/organizer-payments/:id"
-							element={
-								<ProtectedRoute
-									element={<OrganizerPaymentPage />}
-									roles={["ORGANIZER"]}
-								/>
-							}
-						/>
-						{/* <Route
+            <Route path="/payment" element={<Payment />} />
+            <Route
+              path="/player-dashboard"
+              element={
+                <ProtectedRoute
+                  element={<PlayerDashboard />}
+                  roles={["PLAYER"]}
+                />
+              }
+            />
+            <Route
+              path="/signup-organizer"
+              element={
+                <ProtectedRoute
+                  element={<SignupOrganizer />}
+                  roles={["ORGANIZER"]}
+                />
+              }
+            />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
+            <Route
+              path="/tournament-registration/:id"
+              element={
+                <ProtectedRoute
+                  element={<TournamentRegistration />}
+                  roles={["PLAYER"]}
+                />
+              }
+            />
+            <Route
+              path="/organizer-dashboard"
+              element={
+                <ProtectedRoute
+                  element={<Organizerdashboardnew />}
+                  roles={["ORGANIZER"]}
+                />
+              }
+            />
+            <Route
+              path="/create-tournament"
+              element={
+                <ProtectedRoute
+                  element={<CreateTournament />}
+                  roles={["ORGANIZER"]}
+                />
+              }
+            />
+            <Route
+              path="/update-tournament"
+              element={
+                <ProtectedRoute
+                  element={<UpdateTournament />}
+                  roles={["ORGANIZER"]}
+                />
+              }
+            />
+            <Route
+              path="/organizer-payments/:id"
+              element={
+                <ProtectedRoute
+                  element={<OrganizerPaymentPage />}
+                  roles={["ORGANIZER"]}
+                />
+              }
+            />
+            {/* <Route
 							path="/opay"
 							element={
 								<ProtectedRoute
@@ -135,64 +122,54 @@ const App = () => {
 								/>
 							}
 						/> */}
-						<Route
-							path="/ppay"
-							element={
-								<ProtectedRoute
-									element={<PlayerExpensePage />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/tpdu/:id"
-							element={
-								<ProtectedRoute
-									element={<TournamentDashboardUp />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/tpdo/:id"
-							element={
-								<ProtectedRoute
-									element={<TournamentDashboardOn />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
-						<Route
-							path="/tpf/:id"
-							element={<FinishedTournamentPage />}
-						/>
-						<Route
-							path="/todu/:id"
-							element={<UpcomingTournamentOrganizerView />}
-						/>
-						<Route
-							path="/todo"
-							element={<OrganizerTournamentDashboardOn />}
-						/>
-						<Route path="/tf" element={<TournamentFinished />} />
-						<Route
-							path="/chess-game-setup"
-							element={<GameSetup />}
-						/>
-						<Route
-							path="/chess-game"
-							element={
-								<ProtectedRoute
-									element={<ChessGame />}
-									roles={["PLAYER"]}
-								/>
-							}
-						/>
-					</Routes>
-				</main>
-			</div>
-		</Router>
-	);
+            <Route
+              path="/ppay"
+              element={
+                <ProtectedRoute
+                  element={<PlayerExpensePage />}
+                  roles={["PLAYER"]}
+                />
+              }
+            />
+            <Route
+              path="/tpdu/:id"
+              element={
+                <ProtectedRoute
+                  element={<TournamentDashboardUp />}
+                  roles={["PLAYER"]}
+                />
+              }
+            />
+            <Route
+              path="/tpdo/:id"
+              element={
+                <ProtectedRoute
+                  element={<TournamentDashboardOn />}
+                  roles={["PLAYER"]}
+                />
+              }
+            />
+            <Route path="/tpf/:id" element={<FinishedTournamentPage />} />
+            <Route
+              path="/todu/:id"
+              element={<UpcomingTournamentOrganizerView />}
+            />
+            <Route path="/todo" element={<OrganizerTournamentDashboardOn />} />
+            <Route path="/tf" element={<TournamentFinished />} />
+            <Route path="/chess-game-setup" element={<GameSetup />} />
+            <Route
+              path="/chess-game"
+              element={
+                <ProtectedRoute element={<ChessGame />} roles={["PLAYER"]} />
+              }
+            />
+
+            <Route path="/play-with-ai" element={<ChessboardComponent />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  );
 };
 
 export default App;
