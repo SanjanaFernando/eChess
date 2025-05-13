@@ -19,7 +19,12 @@ const GameSetup = () => {
       timeControl,
       color: selectedColor,
     };
-    navigate("/chess-game", { state: gameSettings });
+
+    if (gameMode === "machine") {
+      navigate("/play-with-ai", { state: gameSettings });
+    } else {
+      navigate("/chess-game", { state: gameSettings });
+    }
   };
 
   return (
