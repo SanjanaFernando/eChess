@@ -4,7 +4,7 @@ import { Chessboard } from "react-chessboard";
 import "./Chessboard.css";
 
 // Lichess worker import
-import LichessWorker from "./lichessWorker.js?worker";
+import LichessWorker from "../../utils/lichessWorker.js?worker";
 
 const ChessboardComponent = () => {
   const gameRef = useRef(new Chess());
@@ -132,17 +132,25 @@ const ChessboardComponent = () => {
   };
 
   const onDrop = (sourceSquare, targetSquare) => {
-    if (!gameStarted || !isPlayerTurn) return false;
+    if (!gameStarted) {
+      playSound("error"); // Play error sound if the game hasn't started
+      return false;
+    }
+
+    if (!isPlayerTurn) {
+      playSound("error"); // Play error sound if it's not the player's turn
+      return false;
+    }
 
     const game = gameRef.current;
     const move = game.move({
       from: sourceSquare,
       to: targetSquare,
-      promotion: "q",
+      promotion: "q", // Always promote to queen
     });
 
     if (move === null) {
-      playSound("error");
+      playSound("error"); // Play error sound if the move is illegal
       return false;
     }
 
@@ -158,13 +166,13 @@ const ChessboardComponent = () => {
         if (game.isCheckmate()) {
           setGameOverMessage("Checkmate! You won!");
           playSound("checkmate");
-        } else if (game.isDraw()) {
+        } else if (game.in_draw()) {
           setGameOverMessage("Game drawn!");
           playSound("draw");
         } else {
           setGameOverMessage("Game over!");
         }
-        setGameStarted(false); // don't reset instantly
+        setGameStarted(false); // Don't reset instantly
       }, 300);
     } else {
       setIsPlayerTurn(false); // Switch to opponent's turn (Lichess)

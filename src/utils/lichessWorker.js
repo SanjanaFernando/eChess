@@ -1,6 +1,6 @@
 // lichessWorker.js
 const LICHESS_API_URL = "https://lichess.org/api/cloud-eval";
-const API_TOKEN = "lip_y8Dyt61OTE2TfDMgYB8F";
+const API_TOKEN = import.meta.env.VITE_LICHESS_API_TOKEN;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -11,7 +11,6 @@ onmessage = async function (e) {
     const fen = data.fen;
 
     try {
-     
       const response = await fetch(
         `${LICHESS_API_URL}?fen=${encodeURIComponent(fen)}`,
         {
