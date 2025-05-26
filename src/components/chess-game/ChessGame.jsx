@@ -29,7 +29,7 @@ const ChessGame = () => {
   useEffect(() => {
     if (gameMode === "online") {
       // Connect to the Socket.IO server
-      socket.current = io("http://localhost:8000"); // Update to match the server's port
+      socket.current = io("https://echess-server.onrender.com"); // Update to match the server's port
 
       // Show waiting message
       socket.current.on("waiting-for-opponent", () => {
