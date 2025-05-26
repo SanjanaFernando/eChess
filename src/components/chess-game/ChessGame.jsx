@@ -15,56 +15,132 @@ const ChessGame = () => {
   const [game, setGame] = useState(new Chess());
   const [gameStarted, setGameStarted] = useState(false);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
-  const [currentTurn, setCurrentTurn] = useState("white"); // Track whose turn it is
-  const [moveHistory, setMoveHistory] = useState([]); // Store move history as an array of turns
+  const [currentTurn, setCurrentTurn] = useState("white");
+  const [moveHistory, setMoveHistory] = useState([]);
   const socket = useRef(null);
   const [roomId, setRoomId] = useState(null);
   const [drawRequested, setDrawRequested] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [winner, setWinner] = useState(null); // Track the winner
+  const [winner, setWinner] = useState(null);
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [gameOverSubMessage, setGameOverSubMessage] = useState("");
   const [gameOverColor, setGameOverColor] = useState("");
 
+  // Sounds
+  const moveSelfSound = new Audio("/sounds/move-self.mp3");
+  const moveOpponentSound = new Audio("/sounds/move-opponent.mp3");
+  const captureSound = new Audio("/sounds/capture.mp3");
+  const castleSound = new Audio("/sounds/castle.mp3");
+  const drawOfferSound = new Audio("/sounds/drawoffer.mp3");
+  const gameDrawSound = new Audio("/sounds/game-draw.mp3");
+  const gameEndSound = new Audio("/sounds/game-end.mp3");
+  const gameLoseSound = new Audio("/sounds/game-lose.mp3");
+  const gameWinSound = new Audio("/sounds/game-win.mp3");
+  const illegalSound = new Audio("/sounds/illegal.mp3");
+  const checkSound = new Audio("/sounds/move-check.mp3");
+  const notificationSound = new Audio("/sounds/notification.mp3");
+  const promoteSound = new Audio("/sounds/promote.mp3");
+  const gameStartSound = new Audio("/sounds/game-start.mp3");
+
+  const playSound = (type) => {
+    switch (type) {
+      case "move":
+        moveSelfSound.play();
+        break;
+      case "opponent-move":
+        moveOpponentSound.play();
+        break;
+      case "capture":
+        captureSound.play();
+        break;
+      case "castle":
+        castleSound.play();
+        break;
+      case "draw-offer":
+        drawOfferSound.play();
+        break;
+      case "draw":
+        gameDrawSound.play();
+        break;
+      case "checkmate":
+        gameEndSound.play();
+        break;
+      case "win":
+        gameWinSound.play();
+        break;
+      case "lose":
+      case "defeat":
+        gameLoseSound.play();
+        break;
+      case "illegal":
+      case "error":
+        illegalSound.play();
+        break;
+      case "check":
+        checkSound.play();
+        break;
+      case "notification":
+        notificationSound.play();
+        break;
+      case "promote":
+        promoteSound.play();
+        break;
+      case "start":
+        gameStartSound.play();
+        break;
+      default:
+        break;
+    }
+  };
+
   useEffect(() => {
     if (gameMode === "online") {
-      // Connect to the Socket.IO server
-      socket.current = io("http://localhost:8000"); // Update to match the server's port
+      socket.current = io("http://localhost:8000");
 
-      // Show waiting message
       socket.current.on("waiting-for-opponent", () => {
         setWaitingForOpponent(true);
       });
 
-      // Listen for matchmaking events
       socket.current.on("match-found", ({ roomId, color }) => {
         setRoomId(roomId);
         setGameStarted(true);
         setWaitingForOpponent(false);
+        playSound("start");
         console.log(`Match found! Room ID: ${roomId}, Your color: ${color}`);
       });
 
-      // Listen for opponent's moves
       socket.current.on("opponent-move", (move) => {
         safeGameMutate((game) => {
           game.move(move);
         });
 
+        // Play opponent move sound
+        playSound("opponent-move");
+
+        // Play capture/castle/promote/check if applicable
+        if (move.flags && move.flags.includes("c")) playSound("capture");
+        if (
+          move.flags &&
+          (move.flags.includes("k") || move.flags.includes("q"))
+        )
+          playSound("castle");
+        if (move.flags && move.flags.includes("p")) playSound("promote");
+
+        // Check for check
+        const tempGame = new Chess(game.fen());
+        tempGame.move(move);
+        if (tempGame.in_check()) playSound("check");
+
         // Update move history with the opponent's move
         setMoveHistory((prevHistory) => {
           const lastTurn = prevHistory[prevHistory.length - 1];
-
           if (color === "black") {
-            // If opponent is white, add a new turn
             return [...prevHistory, { white: move.san, black: null }];
           } else {
-            // If opponent is black, update the last turn
             if (lastTurn && lastTurn.black === null) {
-              // Create a new object for the updated turn
               const updatedTurn = { ...lastTurn, black: move.san };
               return [...prevHistory.slice(0, -1), updatedTurn];
             } else {
-              // If no last turn exists, create a new one
               return [...prevHistory, { white: null, black: move.san }];
             }
           }
@@ -80,46 +156,50 @@ const ChessGame = () => {
             setGameOverSubMessage("by checkmate");
             setGameOverColor(color === "white" ? "black" : "white");
             setGameOver(true);
+            playSound("checkmate");
+            playSound("lose");
           }
           return newGame;
         });
 
-        // Switch turn
         setCurrentTurn((prevTurn) =>
           prevTurn === "white" ? "black" : "white"
         );
       });
 
-      // Listen for draw request from opponent
       socket.current.on("draw-requested", () => {
+        playSound("draw-offer");
         if (
           window.confirm("Your opponent has requested a draw. Do you accept?")
         ) {
           socket.current.emit("draw-accepted", { roomId });
-          resetGame();
+          setGameOverMessage("Game Drawn");
+          setGameOverSubMessage("by agreement");
+          setGameOverColor("draw");
+          setGameOver(true);
+          playSound("draw");
         } else {
           socket.current.emit("draw-rejected", { roomId });
         }
       });
 
-      // Listen for draw acceptance
       socket.current.on("draw-accepted", () => {
         setGameOverMessage("Game Drawn");
         setGameOverSubMessage("by agreement");
         setGameOverColor("draw");
         setGameOver(true);
+        playSound("draw");
       });
 
-      // Listen for resign event
       socket.current.on("opponent-resigned", () => {
-        // The local player wins, so show their color as the winner
         setGameOverMessage(`${capitalize(color)} Won`);
         setGameOverSubMessage("by resignation");
         setGameOverColor(color);
         setGameOver(true);
+        playSound("checkmate");
+        playSound("win");
       });
 
-      // Cleanup on component unmount
       return () => {
         if (socket.current) socket.current.disconnect();
       };
@@ -146,50 +226,43 @@ const ChessGame = () => {
   };
 
   const onPieceDrop = (source, target) => {
-    if (!gameStarted) return false;
+    if (!gameStarted) {
+      playSound("illegal"); // changed from "notification" to "illegal"
+      return false;
+    }
 
-    // Prevent moves if it's not the player's turn
     if (currentTurn !== color) {
-      console.log("It's not your turn!");
+      playSound("illegal"); // changed from "notification" to "illegal"
       return false;
     }
 
     const move = game.move({
       from: source,
       to: target,
-      promotion: "q", // Always promote to a queen for simplicity
+      promotion: "q",
     });
 
-    // Prevent moves if the player tries to move the opponent's pieces
     if (!move || move.color !== color[0]) {
-      console.log("You can only move your own pieces!");
+      playSound("illegal");
       return false;
     }
 
     if (move) {
-      // Update local game state
       setGame(new Chess(game.fen()));
 
-      // Emit the move to the opponent
       if (gameMode === "online" && socket.current) {
         socket.current.emit("move", { roomId, move });
       }
 
-      // Update move history with the player's move
       setMoveHistory((prevHistory) => {
         const lastTurn = prevHistory[prevHistory.length - 1];
-
         if (color === "white") {
-          // If it's white's move, add a new turn
           return [...prevHistory, { white: move.san, black: null }];
         } else {
-          // If it's black's move, update the last turn
           if (lastTurn && lastTurn.black === null) {
-            // Create a new object for the updated turn
             const updatedTurn = { ...lastTurn, black: move.san };
             return [...prevHistory.slice(0, -1), updatedTurn];
           } else {
-            // If no last turn exists, create a new one
             return [...prevHistory, { white: null, black: move.san }];
           }
         }
@@ -202,10 +275,22 @@ const ChessGame = () => {
         setGameOverSubMessage("by checkmate");
         setGameOverColor(color);
         setGameOver(true);
+        playSound("checkmate");
+        playSound("win");
         return true;
       }
 
-      // Switch turn
+      playSound("move");
+
+      if (move.flags && move.flags.includes("c")) playSound("capture");
+      if (move.flags && (move.flags.includes("k") || move.flags.includes("q")))
+        playSound("castle");
+      if (move.flags && move.flags.includes("p")) playSound("promote");
+
+      const tempGame = new Chess(game.fen());
+      tempGame.move(move);
+      if (tempGame.in_check()) playSound("check");
+
       setCurrentTurn((prevTurn) => (prevTurn === "white" ? "black" : "white"));
 
       return true;
@@ -217,6 +302,7 @@ const ChessGame = () => {
   const handleDrawRequest = () => {
     if (gameMode === "online" && socket.current) {
       socket.current.emit("request-draw", { roomId });
+      playSound("draw-offer");
       alert("Draw request sent to your opponent.");
     }
   };
@@ -226,12 +312,13 @@ const ChessGame = () => {
       if (gameMode === "online" && socket.current) {
         socket.current.emit("resign", { roomId });
       }
-      // The opponent wins, so show their color as the winner
       const opponentColor = color === "white" ? "Black" : "White";
       setGameOverMessage(`${opponentColor} Won`);
       setGameOverSubMessage("by resignation");
       setGameOverColor(color === "white" ? "black" : "white");
       setGameOver(true);
+      playSound("checkmate");
+      playSound("lose");
     }
   };
 

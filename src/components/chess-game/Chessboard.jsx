@@ -64,36 +64,68 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
   }, [isPlayerTurn]);
 
   // Sounds
-  const moveSound = new Audio("/sounds/Move.mp3");
-  const captureSound = new Audio("/sounds/Capture.mp3");
-  const checkSound = new Audio("/sounds/Check.mp3");
-  const checkmateSound = new Audio("/sounds/Checkmate.mp3");
-  const drawSound = new Audio("/sounds/Draw.mp3");
-  const defeatSound = new Audio("/sounds/Defeat.mp3");
-  const errorSound = new Audio("/sounds/Error.mp3");
+  const moveSelfSound = new Audio("/sounds/move-self.mp3");
+  const moveOpponentSound = new Audio("/sounds/move-opponent.mp3");
+  const captureSound = new Audio("/sounds/capture.mp3");
+  const castleSound = new Audio("/sounds/castle.mp3");
+  const drawOfferSound = new Audio("/sounds/drawoffer.mp3");
+  const gameDrawSound = new Audio("/sounds/game-draw.mp3");
+  const gameEndSound = new Audio("/sounds/game-end.mp3");
+  const gameLoseSound = new Audio("/sounds/game-lose.mp3");
+  const gameWinSound = new Audio("/sounds/game-win.mp3");
+  const illegalSound = new Audio("/sounds/illegal.mp3");
+  const checkSound = new Audio("/sounds/move-check.mp3");
+  const notificationSound = new Audio("/sounds/notification.mp3");
+  const promoteSound = new Audio("/sounds/promote.mp3");
+  const gameStartSound = new Audio("/sounds/game-start.mp3");
 
   const playSound = (type) => {
     switch (type) {
       case "move":
-        moveSound.play();
+        moveSelfSound.play();
+        break;
+      case "opponent-move":
+        moveOpponentSound.play();
         break;
       case "capture":
         captureSound.play();
         break;
+      case "castle":
+        castleSound.play();
+        break;
+      case "draw-offer":
+        drawOfferSound.play();
+        break;
+      case "draw":
+        gameDrawSound.play();
+        break;
+      case "checkmate":
+        gameEndSound.play();
+        break;
+      case "win":
+        gameWinSound.play();
+        break;
+      case "lose":
+        gameLoseSound.play();
+        break;
+      case "defeat":
+        gameLoseSound.play();
+        break;
+      case "illegal":
+      case "error":
+        illegalSound.play();
+        break;
       case "check":
         checkSound.play();
         break;
-      case "checkmate":
-        checkmateSound.play();
+      case "notification":
+        notificationSound.play();
         break;
-      case "draw":
-        drawSound.play();
+      case "promote":
+        promoteSound.play();
         break;
-      case "defeat":
-        defeatSound.play();
-        break;
-      case "error":
-        errorSound.play();
+      case "start":
+        gameStartSound.play();
         break;
       default:
         break;
@@ -101,11 +133,6 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
   };
 
   const startGame = () => {
-    if (!setupSide) {
-      alert("Please select a side before starting!");
-      playSound("error");
-      return;
-    }
     gameRef.current = new Chess();
     setFen(gameRef.current.fen());
     setMoveHistory([]);
@@ -113,6 +140,7 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
     setGameOverMessage("");
     setMoveSquares({});
     setIsPlayerTurn(setupSide === "white");
+    playSound("start");
   };
 
   const resetGame = () => {
