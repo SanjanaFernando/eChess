@@ -70,6 +70,20 @@ const ChessGame = () => {
           }
         });
 
+        // Check for checkmate after opponent's move
+        setGame((g) => {
+          const newGame = new Chess(g.fen());
+          newGame.move(move);
+          if (newGame.in_checkmate()) {
+            const opponentColor = color === "white" ? "Black" : "White";
+            setGameOverMessage(`${opponentColor} Won`);
+            setGameOverSubMessage("by checkmate");
+            setGameOverColor(color === "white" ? "black" : "white");
+            setGameOver(true);
+          }
+          return newGame;
+        });
+
         // Switch turn
         setCurrentTurn((prevTurn) =>
           prevTurn === "white" ? "black" : "white"
@@ -180,6 +194,16 @@ const ChessGame = () => {
           }
         }
       });
+
+      // Check for checkmate
+      if (game.in_checkmate()) {
+        const winnerColor = capitalize(color);
+        setGameOverMessage(`${winnerColor} Won`);
+        setGameOverSubMessage("by checkmate");
+        setGameOverColor(color);
+        setGameOver(true);
+        return true;
+      }
 
       // Switch turn
       setCurrentTurn((prevTurn) => (prevTurn === "white" ? "black" : "white"));
