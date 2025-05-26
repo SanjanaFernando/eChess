@@ -3,6 +3,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { Chessboard } from "react-chessboard";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
+import GameOverPopup from "./GameOverPopup";
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 const ChessGame = () => {
   const location = useLocation();
@@ -17,6 +22,9 @@ const ChessGame = () => {
   const [drawRequested, setDrawRequested] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(null); // Track the winner
+  const [gameOverMessage, setGameOverMessage] = useState("");
+  const [gameOverSubMessage, setGameOverSubMessage] = useState("");
+  const [gameOverColor, setGameOverColor] = useState("");
 
   useEffect(() => {
     if (gameMode === "online") {
@@ -62,6 +70,20 @@ const ChessGame = () => {
           }
         });
 
+        // Check for checkmate after opponent's move
+        setGame((g) => {
+          const newGame = new Chess(g.fen());
+          newGame.move(move);
+          if (newGame.in_checkmate()) {
+            const opponentColor = color === "white" ? "Black" : "White";
+            setGameOverMessage(`${opponentColor} Won`);
+            setGameOverSubMessage("by checkmate");
+            setGameOverColor(color === "white" ? "black" : "white");
+            setGameOver(true);
+          }
+          return newGame;
+        });
+
         // Switch turn
         setCurrentTurn((prevTurn) =>
           prevTurn === "white" ? "black" : "white"
@@ -82,14 +104,19 @@ const ChessGame = () => {
 
       // Listen for draw acceptance
       socket.current.on("draw-accepted", () => {
-        alert("Draw accepted! The game is a draw.");
-        resetGame();
+        setGameOverMessage("Game Drawn");
+        setGameOverSubMessage("by agreement");
+        setGameOverColor("draw");
+        setGameOver(true);
       });
 
       // Listen for resign event
       socket.current.on("opponent-resigned", () => {
-        alert("Your opponent has resigned. You win!");
-        resetGame();
+        // The local player wins, so show their color as the winner
+        setGameOverMessage(`${capitalize(color)} Won`);
+        setGameOverSubMessage("by resignation");
+        setGameOverColor(color);
+        setGameOver(true);
       });
 
       // Cleanup on component unmount
@@ -168,6 +195,16 @@ const ChessGame = () => {
         }
       });
 
+      // Check for checkmate
+      if (game.in_checkmate()) {
+        const winnerColor = capitalize(color);
+        setGameOverMessage(`${winnerColor} Won`);
+        setGameOverSubMessage("by checkmate");
+        setGameOverColor(color);
+        setGameOver(true);
+        return true;
+      }
+
       // Switch turn
       setCurrentTurn((prevTurn) => (prevTurn === "white" ? "black" : "white"));
 
@@ -189,8 +226,12 @@ const ChessGame = () => {
       if (gameMode === "online" && socket.current) {
         socket.current.emit("resign", { roomId });
       }
-      alert("You have resigned. Your opponent wins!");
-      resetGame();
+      // The opponent wins, so show their color as the winner
+      const opponentColor = color === "white" ? "Black" : "White";
+      setGameOverMessage(`${opponentColor} Won`);
+      setGameOverSubMessage("by resignation");
+      setGameOverColor(color === "white" ? "black" : "white");
+      setGameOver(true);
     }
   };
 
@@ -204,7 +245,7 @@ const ChessGame = () => {
             </h1>
           ) : (
             <h1 className="text-2xl font-bold mb-4">
-              🔗 Connecting to server...
+              ⏳ Waiting for an opponent...
             </h1>
           )}
         </div>
@@ -281,6 +322,20 @@ const ChessGame = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Game Over Popup */}
+      {gameOver && (
+        <GameOverPopup
+          message={gameOverMessage}
+          subMessage={gameOverSubMessage}
+          winnerColor={gameOverColor}
+          onRematch={() => {
+            setGameOver(false);
+            resetGame();
+          }}
+          onBackToSetup={() => (window.location.href = "/chess-game-setup")}
+        />
       )}
     </div>
   );

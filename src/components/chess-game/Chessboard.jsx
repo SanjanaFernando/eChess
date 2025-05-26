@@ -3,8 +3,8 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import "./Chessboard.css";
 import LichessWorker from "../../utils/lichessWorker.js?worker";
-import { useLocation } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import GameOverPopup from "./GameOverPopup";
 
 const ChessboardComponent = ({ playerSide: setupSide }) => {
   console.log("setupSide (should be 'white' or 'black'):", setupSide);
@@ -16,10 +16,9 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
   const [moveSquares, setMoveSquares] = useState({});
   const [isPlayerTurn, setIsPlayerTurn] = useState(null);
   const stockfishWorker = useRef(null);
+  const navigate = useNavigate();
 
-  
   useEffect(() => {
-    
     setIsPlayerTurn(setupSide === "white");
   }, [setupSide]);
 
@@ -185,25 +184,42 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
     }
   };
 
+  // Offer draw: randomly accept or refuse
   const handleDraw = () => {
-    const confirmDraw = window.confirm("Do both players agree to a draw?");
+    const confirmDraw = window.confirm("Do you want to offer a draw?");
     if (confirmDraw) {
-      setGameOverMessage("Game drawn by agreement.");
-      playSound("draw");
-      setGameStarted(false);
+      // 50% chance to accept the draw
+      if (Math.random() < 0.5) {
+        setGameOverMessage("Game drawn by agreement.");
+        playSound("draw");
+        setGameStarted(false);
+      } else {
+        alert("Draw offer refused by opponent.");
+      }
     }
   };
 
+  // Undo: undo last move(s) and set turn to player
   const handleUndo = () => {
     const game = gameRef.current;
     if (moveHistory.length === 0) return;
 
+    // Undo last move (AI or player)
     game.undo();
-    const newHistory = [...moveHistory];
+    let newHistory = [...moveHistory];
     newHistory.pop();
+
+    // If it's not player's turn, undo one more (undo both AI and player moves)
+    if (!isPlayerTurn && moveHistory.length > 1) {
+      game.undo();
+      newHistory.pop();
+    }
 
     setMoveHistory(newHistory);
     setFen(game.fen());
+    setGameOverMessage("");
+    setGameStarted(true);
+    setIsPlayerTurn(true); // Always give turn back to player after undo
   };
 
   // Move history rows
@@ -292,6 +308,62 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
     });
   }, [isPlayerTurn, gameStarted]);
 
+  // Helper to get popup content
+  const getGameOverPopup = () => {
+    if (!gameOverMessage) return null;
+
+    let message = "";
+    let subMessage = "";
+    let winnerColor = "";
+
+    if (gameOverMessage.includes("Checkmate")) {
+      if (
+        gameOverMessage.includes("won") ||
+        gameOverMessage.includes("You won")
+      ) {
+        message = `${
+          setupSide.charAt(0).toUpperCase() + setupSide.slice(1)
+        } Won`;
+        subMessage = "by checkmate";
+        winnerColor = setupSide;
+      } else {
+        const aiColor = setupSide === "white" ? "Black" : "White";
+        message = `${aiColor} Won`;
+        subMessage = "by checkmate";
+        winnerColor = setupSide === "white" ? "black" : "white";
+      }
+    } else if (gameOverMessage.includes("drawn")) {
+      message = "Game Drawn";
+      subMessage = "by agreement";
+      winnerColor = "draw";
+    } else if (gameOverMessage.includes("resigned")) {
+      message = `${
+        setupSide.charAt(0).toUpperCase() + setupSide.slice(1)
+      } Lost`;
+      subMessage = "by resignation";
+      winnerColor = setupSide;
+    } else if (gameOverMessage.includes("lost")) {
+      const aiColor = setupSide === "white" ? "Black" : "White";
+      message = `${aiColor} Won`;
+      subMessage = "by checkmate";
+      winnerColor = setupSide === "white" ? "black" : "white";
+    } else {
+      message = "Game Over";
+      subMessage = "";
+      winnerColor = "draw";
+    }
+
+    return (
+      <GameOverPopup
+        message={message}
+        subMessage={subMessage}
+        winnerColor={winnerColor}
+        onRematch={startGame}
+        onBackToSetup={() => navigate("/chess-game-setup")}
+      />
+    );
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white p-6">
       <div className="flex flex-col items-center w-full max-w-6xl bg-white p-4 rounded-lg shadow-lg border border-gray-300">
@@ -378,11 +450,7 @@ const ChessboardComponent = ({ playerSide: setupSide }) => {
           </div>
         </div>
       </div>
-      {gameOverMessage && (
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <h2>{gameOverMessage}</h2>
-        </div>
-      )}
+      {getGameOverPopup()}
     </div>
   );
 };
