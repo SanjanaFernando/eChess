@@ -95,7 +95,7 @@ const ChessGame = () => {
 
   useEffect(() => {
     if (gameMode === "online") {
-      socket.current = io("http://localhost:8000");
+      socket.current = io("https://echess-server.onrender.com");
 
       socket.current.on("waiting-for-opponent", () => {
         setWaitingForOpponent(true);
