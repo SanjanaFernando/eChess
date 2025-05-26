@@ -2,21 +2,26 @@ import React, { useState, useRef, useEffect } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import "./Chessboard.css";
-
-// Lichess worker import
 import LichessWorker from "../../utils/lichessWorker.js?worker";
+import { useLocation } from "react-router-dom";
 
-const ChessboardComponent = () => {
+
+const ChessboardComponent = ({ playerSide: setupSide }) => {
+  console.log("setupSide (should be 'white' or 'black'):", setupSide);
   const gameRef = useRef(new Chess());
   const [fen, setFen] = useState(gameRef.current.fen());
   const [moveHistory, setMoveHistory] = useState([]);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [playerSide, setPlayerSide] = useState(null);
+  const [gameStarted, setGameStarted] = useState(true);
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [moveSquares, setMoveSquares] = useState({});
-  const [isPlayerTurn, setIsPlayerTurn] = useState(true); // Track if it's player's turn
-
+  const [isPlayerTurn, setIsPlayerTurn] = useState(null);
   const stockfishWorker = useRef(null);
+
+  
+  useEffect(() => {
+    
+    setIsPlayerTurn(setupSide === "white");
+  }, [setupSide]);
 
   useEffect(() => {
     stockfishWorker.current = new LichessWorker();
@@ -96,17 +101,8 @@ const ChessboardComponent = () => {
     }
   };
 
-  const handleSideSelect = (side) => {
-    if (side === "random") {
-      const randomSide = Math.random() < 0.5 ? "white" : "black";
-      setPlayerSide(randomSide);
-    } else {
-      setPlayerSide(side);
-    }
-  };
-
   const startGame = () => {
-    if (!playerSide) {
+    if (!setupSide) {
       alert("Please select a side before starting!");
       playSound("error");
       return;
@@ -117,14 +113,13 @@ const ChessboardComponent = () => {
     setGameStarted(true);
     setGameOverMessage("");
     setMoveSquares({});
-    setIsPlayerTurn(playerSide === "white");
+    setIsPlayerTurn(setupSide === "white");
   };
 
   const resetGame = () => {
     gameRef.current = new Chess();
     setFen(gameRef.current.fen());
     setMoveHistory([]);
-    setPlayerSide(null);
     setGameStarted(false);
     setGameOverMessage("");
     setMoveSquares({});
@@ -211,6 +206,7 @@ const ChessboardComponent = () => {
     setFen(game.fen());
   };
 
+  // Move history rows
   const moveRows = [];
   for (let i = 0; i < moveHistory.length; i += 2) {
     moveRows.push({
@@ -297,118 +293,91 @@ const ChessboardComponent = () => {
   }, [isPlayerTurn, gameStarted]);
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-          padding: "20px",
-          gap: "30px",
-        }}
-      >
-        {/* LEFT HALF: Chessboard + Players */}
-        <div style={{ flex: 1, maxWidth: "100%" }}>
-          <div style={{ textAlign: "center", marginBottom: "10px" }}>
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Player Icon"
-              style={{ borderRadius: "50%" }}
-            />
-            <div>{playerSide === "white" ? "You" : "Opponent"}</div>
-          </div>
-
-          <Chessboard
-            position={fen}
-            onPieceDrop={onDrop}
-            onSquareClick={onPieceClick}
-            boardWidth={500}
-            arePiecesDraggable={gameStarted}
-            boardOrientation={playerSide || "white"}
-            customSquareStyles={moveSquares}
-          />
-
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Player Icon"
-              style={{ borderRadius: "50%" }}
-            />
-            <div>{playerSide === "black" ? "You" : "Opponent"}</div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white p-6">
+      <div className="flex flex-col items-center w-full max-w-6xl bg-white p-4 rounded-lg shadow-lg border border-gray-300">
+        {/* Player Details (Top) */}
+        <div className="w-full flex justify-center mb-4">
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center w-1/3">
+            <h2
+              className={`text-lg font-bold ${
+                isPlayerTurn ? "text-gray-700" : "text-blue-500"
+              }`}
+            >
+              🧑 AI Opponent
+            </h2>
+            <p>{setupSide === "white" ? "⚫ Black" : "⚪ White"}</p>
           </div>
         </div>
 
-        {/* RIGHT HALF: Play controls + Move history */}
-        <div style={{ flex: 1, maxWidth: "100%" }}>
-          {/* Play and move history */}
-          {!gameStarted ? (
-            <div style={{ marginBottom: "30px" }}>
+        {/* Chessboard and Move History */}
+        <div className="flex w-full">
+          {/* Chessboard */}
+          <div className="flex-1 flex items-center justify-center bg-gray-100 p-4 rounded-lg shadow-lg border border-gray-300">
+            <Chessboard
+              position={fen}
+              onPieceDrop={onDrop}
+              onSquareClick={onPieceClick}
+              boardWidth={500}
+              arePiecesDraggable={gameStarted}
+              boardOrientation={setupSide}
+              customSquareStyles={moveSquares}
+            />
+          </div>
+
+          {/* Move History & Controls */}
+          <div className="w-1/4 ml-4 bg-gray-50 p-4 rounded-lg shadow-lg border border-gray-300">
+            <h3 className="text-lg font-bold mb-2">📜 Move History</h3>
+            <ul className="list-none pl-0 h-64 overflow-y-auto">
+              {moveRows.map((row, idx) => (
+                <li key={idx} className="flex justify-between">
+                  <span>
+                    {row.moveNumber}. {row.white || ""}
+                  </span>
+                  <span>{row.black || ""}</span>
+                </li>
+              ))}
+            </ul>
+            {/* Buttons */}
+            <div className="mt-4">
               <button
-                onClick={startGame}
-                style={{
-                  width: "100%",
-                  padding: "15px",
-                  fontSize: "24px",
-                  backgroundColor: "green",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  marginBottom: "15px",
-                }}
+                className="w-full bg-green-500 text-white py-2 rounded-lg mb-2 hover:bg-green-600"
+                onClick={handleDraw}
+                disabled={!gameStarted}
               >
-                Play
+                🤝 Offer Draw
               </button>
-
-              <strong>Select your side:</strong>
-              <div style={{ marginTop: "10px" }}>
-                <button
-                  onClick={() => handleSideSelect("white")}
-                  style={{ marginRight: "10px" }}
-                >
-                  White
-                </button>
-                <button
-                  onClick={() => handleSideSelect("black")}
-                  style={{ marginRight: "10px" }}
-                >
-                  Black
-                </button>
-                <button onClick={() => handleSideSelect("random")}>
-                  Random
-                </button>
-              </div>
+              <button
+                className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+                onClick={handleResign}
+                disabled={!gameStarted}
+              >
+                🏳️ Resign
+              </button>
+              <button
+                className="w-full bg-gray-400 text-white py-2 rounded-lg mt-2 hover:bg-gray-500"
+                onClick={handleUndo}
+                disabled={!gameStarted || moveHistory.length === 0}
+              >
+                ⬅️ Undo
+              </button>
             </div>
-          ) : (
-            <div style={{ marginBottom: "30px" }}>
-              <button onClick={handleUndo}>Undo</button>
-              <button onClick={handleDraw}>Draw</button>
-              <button onClick={handleResign}>Resign</button>
-            </div>
-          )}
+          </div>
+        </div>
 
-          <div>
-            <h3>Move History</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>White</th>
-                  <th>Black</th>
-                </tr>
-              </thead>
-              <tbody>
-                {moveRows.map((row, idx) => (
-                  <tr key={idx}>
-                    <td>{row.moveNumber}.</td>
-                    <td>{row.white}</td>
-                    <td>{row.black}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Player Details (Bottom) */}
+        <div className="w-full flex justify-center mt-4">
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md text-center w-1/3">
+            <h2
+              className={`text-lg font-bold ${
+                isPlayerTurn ? "text-blue-500" : "text-gray-700"
+              }`}
+            >
+              🧑 You
+            </h2>
+            <p>{setupSide === "white" ? "⚪ White" : "⚫ Black"}</p>
           </div>
         </div>
       </div>
-
       {gameOverMessage && (
         <div style={{ marginTop: "20px", textAlign: "center" }}>
           <h2>{gameOverMessage}</h2>
@@ -418,4 +387,10 @@ const ChessboardComponent = () => {
   );
 };
 
-export default ChessboardComponent;
+const ChessboardPage = () => {
+  const location = useLocation();
+  const { color } = location.state || {};
+  return <ChessboardComponent playerSide={color} />;
+};
+
+export default ChessboardPage;
